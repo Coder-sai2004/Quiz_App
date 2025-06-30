@@ -1,0 +1,298 @@
+[
+  {
+    "question": "What temperature does water boil at?",
+    "optionA": "50 degrees Celcius",
+    "optionB": "25 degrees Celcius",
+    "optionC": "100 degrees Celcius",
+    "optionD": "150 degrees Celcius",
+    "answer": "100 degrees Celcius"
+  },
+  {
+    "question": "Who wrote Julius Caesar, Macbeth and Hamlet?",
+    "optionA": "Wole Soyinka",
+    "optionB": "William Shakespeare",
+    "optionC": "Ngozi Chimamanda Adichie",
+    "optionD": "Dan Brown",
+    "answer": "William Shakespeare"
+  },
+  {
+    "question": "What did the crocodile swallow in Peter Pan?",
+    "optionA": "A Book",
+    "optionB": "A Computer",
+    "optionC": "A pair of shoes",
+    "optionD": "Alarm Clock",
+    "answer": "Alarm Clock"
+  },
+  {
+    "question": "Which is the only mammal that can’t jump?",
+    "optionA": "Dog",
+    "optionB": "Elephant",
+    "optionC": "Goat",
+    "optionD": "Lion",
+    "answer": "Elephant"
+  },
+  {
+    "question": "Who lived at 221B, Baker Street, London?",
+    "optionA": "Tony Stark",
+    "optionB": "Morgan Freeman",
+    "optionC": "Sherlock Holmes",
+    "optionD": "Samuel L. Jackson",
+    "answer": "Sherlock Holmes"
+  },
+  {
+    "question": "What colour is a panda?",
+    "optionA": "Green and Yellow",
+    "optionB": "Blue and Red",
+    "optionC": "Green and White",
+    "optionD": "Black and White",
+    "answer": "Black and White"
+  },
+  {
+    "question": "Where is the smallest bone in the human body?",
+    "optionA": "The Chest",
+    "optionB": "The Ear",
+    "optionC": "The Legs",
+    "optionD": "The Hands",
+    "answer": "The Ear"
+  },
+  {
+    "question": "What does the roman numeral C represent?",
+    "optionA": "100",
+    "optionB": "10",
+    "optionC": "10,000",
+    "optionD": "1,000,000",
+    "answer": "100"
+  },
+  {
+    "question": "What takes place in Hong Kong's Happy Valley?",
+    "optionA": "Chicken Wrestling",
+    "optionB": "Horse racing",
+    "optionC": "Street Racing",
+    "optionD": "Arm Wrestling",
+    "answer": "Horse racing"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "optionA": "Alexander Graham Bell",
+    "optionB": "Sir Isaac Newton",
+    "optionC": "Leonardo Da Vinci",
+    "optionD": "Albert Einstein",
+    "answer": "Leonardo Da Vinci"
+  },
+  {
+    "question": "What’s the most important book in the Moslem religion?",
+    "optionA": "The Koran",
+    "optionB": "The Dictionary",
+    "optionC": "The Bible",
+    "optionD": "The Chemistry text Book",
+    "answer": "The Koran"
+  },
+  {
+    "question": "What’s the capital of Ethiopia?",
+    "optionA": "Cape Town",
+    "optionB": "San Francisco",
+    "optionC": "Abuja",
+    "optionD": "Syndey",
+    "answer": "Addis Ababa"
+  },
+  {
+    "question": "How many squares are there on a chess board?",
+    "optionA": "128",
+    "optionB": "64",
+    "optionC": "32",
+    "optionD": "256",
+    "answer": "64"
+  },
+  {
+    "question": "Who invented the electric light bulb?",
+    "optionA": "Tom Cruise",
+    "optionB": "Barack Obama",
+    "optionC": "Wole Soyinka",
+    "optionD": "Thomas Edison",
+    "answer": "Thomas Edison"
+  },
+  {
+    "question": "What is the capital of Australia?",
+    "optionA": "Sydney",
+    "optionB": "Canberra",
+    "optionC": "Melbourne",
+    "optionD": "Brisbane",
+    "answer": "Canberra"
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "optionA": "Earth",
+    "optionB": "Venus",
+    "optionC": "Mars",
+    "optionD": "Jupiter",
+    "answer": "Mars"
+  },
+  {
+    "question": "Who wrote the play Romeo and Juliet?",
+    "optionA": "Charles Dickens",
+    "optionB": "William Shakespeare",
+    "optionC": "Jane Austen",
+    "optionD": "Leo Tolstoy",
+    "answer": "William Shakespeare"
+  },
+  {
+    "question": "What is the largest mammal in the world?",
+    "optionA": "Elephant",
+    "optionB": "Blue Whale",
+    "optionC": "Giraffe",
+    "optionD": "Hippopotamus",
+    "answer": "Blue Whale"
+  },
+  {
+    "question": "In which year did World War II end?",
+    "optionA": "1943",
+    "optionB": "1945",
+    "optionC": "1939",
+    "optionD": "1950",
+    "answer": "1945"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "optionA": "Leonardo da Vinci",
+    "optionB": "Vincent van Gogh",
+    "optionC": "Pablo Picasso",
+    "optionD": "Claude Monet",
+    "answer": "Leonardo da Vinci"
+  },
+  {
+    "question": "What is the chemical symbol for water?",
+    "optionA": "H₂O",
+    "optionB": "CO₂",
+    "optionC": "NaCl",
+    "optionD": "O₂",
+    "answer": "H₂O"
+  },
+  {
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "optionA": "China",
+    "optionB": "Thailand",
+    "optionC": "Japan",
+    "optionD": "South Korea",
+    "answer": "Japan"
+  },
+  {
+    "question": "Who was the first person to walk on the Moon?",
+    "optionA": "Neil Armstrong",
+    "optionB": "Buzz Aldrin",
+    "optionC": "Yuri Gagarin",
+    "optionD": "Michael Collins",
+    "answer": "Neil Armstrong"
+  },
+  {
+    "question": "How many continents are there on Earth?",
+    "optionA": "5",
+    "optionB": "6",
+    "optionC": "7",
+    "optionD": "8",
+    "answer": "7"
+  },
+  {
+    "question": "What is the main ingredient in guacamole?",
+    "optionA": "Tomato",
+    "optionB": "Avocado",
+    "optionC": "Onion",
+    "optionD": "Cucumber",
+    "answer": "Avocado"
+  },
+  {
+    "question": "What is the smallest prime number?",
+    "optionA": "1",
+    "optionB": "2",
+    "optionC": "3",
+    "optionD": "5",
+    "answer": "2"
+  },
+  {
+    "question": "What gas do plants absorb from the atmosphere?",
+    "optionA": "Oxygen",
+    "optionB": "Carbon dioxide",
+    "optionC": "Nitrogen",
+    "optionD": "Hydrogen",
+    "answer": "Carbon dioxide"
+  },
+  {
+    "question": "Which is the longest river in the world?",
+    "optionA": "Amazon",
+    "optionB": "Yangtze",
+    "optionC": "Nile",
+    "optionD": "Mississippi",
+    "answer": "Nile"
+  },
+  {
+    "question": "What is the boiling point of water at sea level in Celsius?",
+    "optionA": "90°C",
+    "optionB": "100°C",
+    "optionC": "110°C",
+    "optionD": "80°C",
+    "answer": "100°C"
+  },
+  {
+    "question": "Who discovered gravity?",
+    "optionA": "Albert Einstein",
+    "optionB": "Isaac Newton",
+    "optionC": "Galileo Galilei",
+    "optionD": "Nikola Tesla",
+    "answer": "Isaac Newton"
+  },
+  {
+    "question": "Which country invented paper?",
+    "optionA": "China",
+    "optionB": "Egypt",
+    "optionC": "India",
+    "optionD": "Greece",
+    "answer": "China"
+  },
+  {
+    "question": "How many sides does a hexagon have?",
+    "optionA": "5",
+    "optionB": "6",
+    "optionC": "7",
+    "optionD": "8",
+    "answer": "6"
+  },
+  {
+    "question": "What is the currency of Japan?",
+    "optionA": "Won",
+    "optionB": "Yen",
+    "optionC": "Yuan",
+    "optionD": "Ringgit",
+    "answer": "Yen"
+  },
+  {
+    "question": "What is the largest desert in the world?",
+    "optionA": "Gobi",
+    "optionB": "Sahara",
+    "optionC": "Antarctic",
+    "optionD": "Arabian",
+    "answer": "Antarctic"
+  },
+  {
+    "question": "Which element has the chemical symbol 'O'?",
+    "optionA": "Gold",
+    "optionB": "Oxygen",
+    "optionC": "Silver",
+    "optionD": "Iron",
+    "answer": "Oxygen"
+  },
+  {
+    "question": "What is the tallest mountain in the world?",
+    "optionA": "K2",
+    "optionB": "Mount Everest",
+    "optionC": "Kangchenjunga",
+    "optionD": "Lhotse",
+    "answer": "Mount Everest"
+  },
+  {
+    "question": "Who is the author of 'Harry Potter' series?",
+    "optionA": "J.K. Rowling",
+    "optionB": "J.R.R. Tolkien",
+    "optionC": "Stephen King",
+    "optionD": "George R.R. Martin",
+    "answer": "J.K. Rowling"
+  }
+]

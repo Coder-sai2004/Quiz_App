@@ -1,0 +1,229 @@
+// Re-using the color palette and common variables from 'home-scss-updated' and 'questions-scss-updated' Canvases
+$primary-blue: #4A90E2;       // A vibrant, inviting blue
+$secondary-green: #50E3C2;    // A fresh, modern green
+$accent-orange: #F5A623;      // A bright, complementary orange for highlights
+$neutral-dark: #333333;       // Dark charcoal for primary text
+$neutral-light: #F8F8F8;      // Off-white for backgrounds
+$white: #FFFFFF;              // Pure white for text on dark backgrounds
+$danger-red: #D0021B;         // For warnings or negative actions
+$info-blue: #4A90E2;          // For informational buttons (same as primary-blue here)
+$success-green: #28a745;      // A standard success green
+
+// Font sizes (re-defining for self-containment if not globally imported)
+$xxlg: 6rem; // Extra large for success icon
+$lg: 2.5rem;  // Large heading size
+$md: 1.5rem;  // Medium spacing/font size
+$sm: 1rem;    // Small spacing/font size (used for padding)
+$xs: 0.5rem;  // Extra small spacing/font size
+$normal: 1rem; // Standard text size
+
+// Button and shadow definitions (re-defining for self-containment)
+$button-radius: 8px;          // Slightly more rounded corners
+$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1); // Soft, subtle shadow
+$shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2); // Deeper shadow for interaction
+$shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.25); // Even deeper shadow
+
+// Breakpoints
+$md-bp: 768px; // Medium breakpoint for responsiveness
+
+.quiz-summary {
+  font-family: 'Inter', sans-serif; // Consistent font
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Center content horizontally
+  justify-content: center; // Center content vertically
+  min-height: 100vh; // Ensure it takes full viewport height
+  background-color: $neutral-light; // Light background for the summary page
+  padding: $md; // Overall padding for the page
+
+  span.success-icon {
+    color: $secondary-green; // Vibrant green for success
+    font-size: $xxlg; // Very large icon for prominence
+    margin-bottom: $sm; // Space below icon
+    text-shadow: 0 4px 8px rgba($secondary-green, 0.3); // Subtle glow/shadow
+  }
+
+  h1 {
+    color: $neutral-dark; // Dark text for readability
+    text-align: center;
+    font-size: $lg;
+    margin-top: 0; // Reset default margin
+    margin-bottom: $md; // Space below heading
+    font-weight: 700; // Bolder for main title
+  }
+
+  h2 {
+    color: $primary-blue; // Use primary blue for score
+    font-size: 2.2rem; // Larger for the score
+    text-align: center;
+    margin-top: $md; // Space above score
+    margin-bottom: $md; // Space below score
+    font-weight: 800; // Extra bold for emphasis
+  }
+
+  h4 {
+    color: $neutral-dark; // Dark text for remark
+    font-size: 1.3rem; // Slightly larger for remark
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: $lg; // More space below remark
+    font-weight: 600;
+  }
+
+  .stats {
+    background-color: $white; // Clean white background for stats box
+    border-radius: 12px; // Rounded corners
+    box-shadow: $shadow-medium; // Consistent shadow
+    width: 90%; // Responsive width
+    max-width: 600px; // Max width for larger screens
+    padding: $lg; // Generous padding inside
+    margin: $md auto; // Centered with margin
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem; // Space between stats lines
+  }
+
+  .stats h4, .stats h2 {
+    text-align: center; // Keep these centered within the stats box
+  }
+
+  .stats .stat {
+    color: $neutral-dark; // Dark text for stat labels
+    font-size: $normal;
+    display: flex; // Use flex for stat lines
+    justify-content: space-between; // Align label and value
+    padding-bottom: 0.3rem; // Small padding for each line
+    border-bottom: 1px dotted rgba($neutral-dark, 0.1); // Subtle separator
+    &:last-child {
+      border-bottom: none; // No border on the last item
+    }
+  }
+
+  // Styles for the numerical value of the stat (on the right)
+  .stats .right {
+    font-weight: 600; // Make values slightly bolder
+    color: $primary-blue; // Highlight values with primary blue
+  }
+
+  section ul {
+    margin-top: $lg; // More space above navigation links
+    text-align: center;
+    list-style: none; // Remove bullet points
+    padding: 0; // Remove default padding
+    display: flex;
+    flex-wrap: wrap; // Allow wrapping on small screens
+    justify-content: center; // Center the buttons
+    gap: $md; // Space between buttons
+  }
+
+  section ul li {
+    display: block; // Make list items block for consistent button styling
+    margin: 0; // Remove default list item margin
+  }
+
+  section ul li a {
+    // Apply gradient and enhanced button styling, similar to other buttons
+    border: none; // Remove default border
+    border-radius: 30px; // Pill shape for softness
+    cursor: pointer;
+    padding: 0.9rem 2rem; // Generous padding for a better click target
+    text-align: center;
+    text-decoration: none; // Ensure no underline
+    transition: all 0.3s ease-in-out;
+    font-weight: 700; // Bold text
+    letter-spacing: 0.5px;
+    box-shadow: $shadow-light; // Initial subtle shadow
+    display: block; // Make anchor fill the li
+    min-width: 150px; // Ensure minimum button width
+  }
+
+  section ul li:first-child a { // Play Again button
+    background: linear-gradient(135deg, $primary-blue, darken($primary-blue, 15%));
+    color: $white;
+    &:hover {
+      background: linear-gradient(135deg, darken($primary-blue, 5%), darken($primary-blue, 20%));
+      box-shadow: $shadow-medium;
+      transform: translateY(-2px);
+    }
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  section ul li:last-child a { // Back to Home button
+    background: linear-gradient(135deg, $neutral-dark, darken($neutral-dark, 10%)); // Darker for home
+    color: $white;
+    &:hover {
+      background: linear-gradient(135deg, lighten($neutral-dark, 5%), darken($neutral-dark, 15%));
+      box-shadow: $shadow-medium;
+      transform: translateY(-2px);
+    }
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .no-stats {
+    color: $neutral-dark; // Consistent dark text
+    margin: $lg auto; // Centered
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: $md-bp) {
+  .quiz-summary {
+    padding: $sm; // Reduce overall padding on mobile
+  }
+
+  .quiz-summary span.success-icon {
+    font-size: 4rem; // Smaller icon on mobile
+  }
+
+  .quiz-summary h1 {
+    font-size: 2rem; // Smaller main heading on mobile
+  }
+
+  .quiz-summary h2 {
+    font-size: 1.8rem; // Smaller score text on mobile
+  }
+
+  .quiz-summary h4 {
+    font-size: 1.1rem; // Smaller remark on mobile
+  }
+
+  div.container.stats {
+    margin: $sm auto; // Adjusted margin
+    padding: $sm; // Reduced padding
+    max-width: 95%; // Take more width
+    width: 95%; // Ensure width
+  }
+
+  section ul {
+    flex-direction: column; // Stack buttons vertically
+    gap: $sm; // Smaller gap
+  }
+
+  section ul li a {
+    width: 90%; // Full width for stacked buttons
+    max-width: 250px; // Keep a reasonable max width
+    margin: 0 auto; // Center individual buttons
+  }
+}
+
+@media (max-width: 480px) {
+  .quiz-summary span.success-icon {
+    font-size: 3.5rem; // Even smaller on very small screens
+  }
+  .quiz-summary h1 {
+    font-size: 1.8rem;
+  }
+  .quiz-summary h2 {
+    font-size: 1.6rem;
+  }
+  .quiz-summary h4 {
+    font-size: 1rem;
+  }
+}

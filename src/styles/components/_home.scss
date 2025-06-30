@@ -1,0 +1,156 @@
+// Define a new color palette and common variables for consistency
+$primary-blue: #4A90E2;       // A vibrant, inviting blue
+$secondary-green: #50E3C2;    // A fresh, modern green
+$accent-orange: #F5A623;      // A bright, complementary orange for highlights
+$neutral-dark: #333333;       // Dark charcoal for primary text
+$neutral-light: #F8F8F8;      // Off-white for backgrounds
+$white: #FFFFFF;              // Pure white for text on dark backgrounds
+$danger-red: #D0021B;         // For warnings or negative actions
+$info-blue: #4A90E2;          // For informational buttons
+
+// Font sizes (assuming you have a base system for $lg and $normal)
+$lg: 2.5rem; // Example large font size
+$normal: 1rem; // Example normal padding/font size
+
+// Button and shadow definitions
+$button-radius: 8px;          // Slightly more rounded corners
+$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1); // Soft, subtle shadow
+$shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2); // Deeper shadow for interaction
+
+#home {
+  background-image: url('../../assets/img/bg.jpg'); // Ensure this image is appealing and subtle
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center; // Changed to center for overall alignment
+  align-items: center;     // Center vertically
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Inter', sans-serif; // Recommended a modern font
+
+  section {
+    background-color: rgba($neutral-light, 0.95); // Slightly opaque off-white for a clean look
+    border-radius: 16px; // More rounded for a softer, modern feel
+    padding: 2.5rem; // Increased padding for better spacing
+    height: auto; // Let content define height, or use min-height if needed
+    width: 35%;
+    max-width: 500px; // Add a max-width for larger screens
+    box-shadow: $shadow-medium; // Prominent shadow for depth
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; // Distribute space within the section
+    text-align: center; // Center content inside the section
+    gap: 1.5rem; // Space between elements inside the section
+  }
+
+  .cube {
+    font-size: 8rem;
+    color: $primary-blue; // Use the primary blue for the main icon/logo
+    margin-bottom: 1rem; // Add some space below the icon
+  }
+
+  h1 {
+    font-size: $lg;
+    font-weight: 600; // Slightly bolder for impact
+    text-align: center;
+    color: $neutral-dark; // Dark text for good contrast
+    margin-bottom: 2rem; // More space below the heading
+  }
+
+  .play-button-container {
+    width: 100%;
+  }
+
+  a.play-btn {
+    // Using a subtle gradient for a modern, inviting look
+    background: linear-gradient(135deg, $primary-blue, darken($primary-blue, 15%));
+    border-radius: 30px; // Pill shape for softness
+    color: $white;
+    display: block;
+    cursor: pointer;
+    padding: 1rem 2rem; // Generous padding for a better click target
+    text-align: center;
+    text-decoration: none; // Ensure no underline for links
+    transition: all 0.3s ease-in-out; // Smooth transition for all properties
+    font-weight: 700; // Make the text bold
+    letter-spacing: 0.5px; // Slight letter spacing
+    box-shadow: $shadow-light; // Initial subtle shadow
+    
+    &:hover {
+      background: linear-gradient(135deg, darken($primary-blue, 5%), darken($primary-blue, 20%));
+      box-shadow: $shadow-medium; // Deeper shadow on hover
+      transform: translateY(-2px); // Slight lift effect
+    }
+    &:active {
+      transform: translateY(0); // Press effect
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .auth-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem; // More space above auth buttons
+  }
+  
+  // Base style for auth buttons to avoid repetition
+  .auth-container .auth-btn {
+    color: $white;
+    cursor: pointer;
+    border-radius: 30px; // Consistent pill shape
+    padding: 0.8rem 1.5rem; // Slightly less padding than play button
+    text-align: center;
+    width: 48%; // Adjusted for cleaner spacing
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    font-weight: 600;
+    box-shadow: $shadow-light;
+
+    &:hover {
+      box-shadow: $shadow-medium;
+      transform: translateY(-2px);
+    }
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  #login {
+    background: linear-gradient(135deg, $danger-red, darken($danger-red, 10%)); // Red for login/danger
+    &:hover {
+      background: linear-gradient(135deg, darken($danger-red, 5%), darken($danger-red, 15%));
+    }
+  }
+
+  #register {
+    background: linear-gradient(135deg, $secondary-green, darken($secondary-green, 10%)); // Green for register/success
+    &:hover {
+      background: linear-gradient(135deg, darken($secondary-green, 5%), darken($secondary-green, 15%));
+    }
+  }
+
+  @media (max-width: 768px) {
+    #home section {
+      padding: 1.5rem; // Adjusted padding for smaller screens
+      width: 90% !important; // Take more width on small screens
+      max-width: 90% !important; // Ensure it doesn't exceed screen width
+      height: auto !important; // Auto height
+      margin: 1rem; // Add some margin to prevent sticking to edges
+    }
+    .cube {
+      font-size: 6rem; // Slightly smaller icon on mobile
+    }
+    h1 {
+      font-size: 2rem; // Adjust heading size for mobile
+    }
+    .auth-container {
+        flex-direction: column; // Stack buttons vertically
+        gap: 1rem; // Space between stacked buttons
+    }
+    .auth-container .auth-btn {
+        width: 100%; // Full width for stacked buttons
+    }
+  }
+}
