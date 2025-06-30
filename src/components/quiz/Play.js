@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 
 import questions from '../../questions.json';
-import isEmpty from '../../utils/is-empty'; // Assuming this utility is still needed
 
 import correctNotification from '../../assets/audio/correct-answer.mp3';
 import wrongNotification from '../../assets/audio/wrong-answer.mp3';
@@ -33,11 +32,9 @@ const Play = () => {
   const [usedFiftyFifty, setUsedFiftyFifty] = useState(false);
   const [previousRandomNumbers, setPreviousRandomNumbers] = useState([]);
   const [time, setTime] = useState({ minutes: 0, seconds: 0, distance: 0 });
-  // Removed numberOfAnsweredQuestions from here as it will be derived directly
   // Set to keep track of answered question indices to prevent double counting
   const [answeredQuestionIndices, setAnsweredQuestionIndices] = useState(new Set());
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
-  // Fix: Initialize previousButtonDisabled with useState
   const [previousButtonDisabled, setPreviousButtonDisabled] = useState(true); 
 
   const navigate = useNavigate(); // For navigation
@@ -60,7 +57,6 @@ const Play = () => {
     setUsedFiftyFifty(false);
     setPreviousRandomNumbers([]);
     setAnsweredQuestionIndices(new Set()); // Reset answered questions set
-    // setNumberOfAnsweredQuestions(0); // This state is now removed
     setNextButtonDisabled(false);
     setPreviousButtonDisabled(true);
     startTimer(); // Start the quiz timer
@@ -80,11 +76,6 @@ const Play = () => {
     setPreviousButtonDisabled(currentQuestionIndex === 0);
     setNextButtonDisabled(currentQuestionIndex === questionsList.length - 1);
   }, [currentQuestionIndex, questionsList.length]);
-
-  // Removed this useEffect as numberOfAnsweredQuestions will be derived directly
-  // useEffect(() => {
-  //   setNumberOfAnsweredQuestions(answeredQuestionIndices.size);
-  // }, [answeredQuestionIndices]);
 
   // Function to start the countdown timer
   const startTimer = () => {
@@ -186,7 +177,6 @@ const Play = () => {
   // Handler for the "Quit" button click
   const handleQuitButtonClick = () => {
     playButtonSound();
-    // Removed window.confirm and alert as per instructions, directly navigate.
     clearInterval(intervalRef.current);
     navigate('/');
   };
