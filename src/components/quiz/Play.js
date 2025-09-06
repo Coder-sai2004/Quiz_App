@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import M from 'materialize-css';
 import classnames from 'classnames';
-import { useNavigate } from 'react-router-dom';
-
-import questions from '../../questions.json';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import correctNotification from '../../assets/audio/correct-answer.mp3';
 import wrongNotification from '../../assets/audio/wrong-answer.mp3';
 import buttonSound from '../../assets/audio/button-sound.mp3';
 
-// Helper function to shuffle an array (immutable)
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+console.log("API_BASE is:", API_BASE);
+
+
+// shuffle fallback (keeps old behavior)
 const shuffleArray = (array) => {
   let newArray = array.slice();
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -21,8 +23,11 @@ const shuffleArray = (array) => {
 };
 
 const Play = () => {
-  // State variables for quiz logic
+  const location = useLocation();
+  const { category, difficulty } = location.state || {};
+
   const [questionsList, setQuestionsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -32,81 +37,107 @@ const Play = () => {
   const [usedFiftyFifty, setUsedFiftyFifty] = useState(false);
   const [previousRandomNumbers, setPreviousRandomNumbers] = useState([]);
   const [time, setTime] = useState({ minutes: 0, seconds: 0, distance: 0 });
-  // Set to keep track of answered question indices to prevent double counting
   const [answeredQuestionIndices, setAnsweredQuestionIndices] = useState(new Set());
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
-  const [previousButtonDisabled, setPreviousButtonDisabled] = useState(true); 
+  const [previousButtonDisabled, setPreviousButtonDisabled] = useState(true);
 
-  const navigate = useNavigate(); // For navigation
-  const correctSound = useRef(null); // Ref for correct answer sound
-  const wrongSound = useRef(null); // Ref for wrong answer sound
-  const buttonSoundRef = useRef(null); // Ref for button click sound
-  const intervalRef = useRef(null); // Ref for timer interval
+  const navigate = useNavigate();
+  const correctSound = useRef(null);
+  const wrongSound = useRef(null);
+  const buttonSoundRef = useRef(null);
+  const intervalRef = useRef(null);
 
-  // Function to initialize or reset the quiz state
-  const initializeQuiz = () => {
-    // Shuffle questions and select the first 15 for the quiz
-    const randomQuestions = shuffleArray(questions).slice(0, 15);
-    setQuestionsList(randomQuestions);
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setCorrectAnswers(0);
-    setWrongAnswers(0);
-    setHints(5);
-    setFiftyFifty(2);
-    setUsedFiftyFifty(false);
-    setPreviousRandomNumbers([]);
-    setAnsweredQuestionIndices(new Set()); // Reset answered questions set
-    setNextButtonDisabled(false);
-    setPreviousButtonDisabled(true);
-    startTimer(); // Start the quiz timer
+  // Build the fetch URL
+  const buildUrl = () => {
+    const params = [];
+    if (category) params.push(`category=${encodeURIComponent(category)}`);
+    if (difficulty) params.push(`difficulty=${encodeURIComponent(difficulty)}`);
+    params.push(`limit=15`);
+    return `${API_BASE}/api/questions${params.length ? `?${params.join('&')}` : ''}`;
   };
 
-  // Effect hook to initialize the quiz on component mount
+  // fetch questions from backend
   useEffect(() => {
-    initializeQuiz();
+    const url = buildUrl();
+    console.log('Fetching questions from:', url);
 
-    // Cleanup function to clear the timer when the component unmounts
-    return () => clearInterval(intervalRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array means this runs once on mount
+    let didCancel = false;
 
-  // Effect hook to update button disabled states based on current question index
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (didCancel) return;
+
+        if (!Array.isArray(data)) {
+          console.warn('Unexpected questions payload:', data);
+          setQuestionsList([]);
+          setLoading(false);
+          return;
+        }
+
+        // shuffle client-side too (backup)
+        const randomQuestions = shuffleArray(data).slice(0, 15);
+
+        setQuestionsList(randomQuestions);
+        setCurrentQuestionIndex(0);
+        setScore(0);
+        setCorrectAnswers(0);
+        setWrongAnswers(0);
+        setHints(5);
+        setFiftyFifty(2);
+        setUsedFiftyFifty(false);
+        setPreviousRandomNumbers([]);
+        setAnsweredQuestionIndices(new Set());
+        setNextButtonDisabled(false);
+        setPreviousButtonDisabled(true);
+
+        if (randomQuestions.length > 0) startTimer();
+        setLoading(false);
+
+        if (randomQuestions.length === 0) {
+          M.toast({ html: 'No questions found for your selection.', classes: 'toast-invalid', displayLength: 2000 });
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching questions:', err);
+        setLoading(false);
+        M.toast({ html: 'Failed to load questions.', classes: 'toast-invalid', displayLength: 2000 });
+      });
+
+    return () => {
+      didCancel = true;
+      clearInterval(intervalRef.current);
+    };
+  }, [category, difficulty]);
+
   useEffect(() => {
     setPreviousButtonDisabled(currentQuestionIndex === 0);
     setNextButtonDisabled(currentQuestionIndex === questionsList.length - 1);
   }, [currentQuestionIndex, questionsList.length]);
 
-  // Function to start the countdown timer
   const startTimer = () => {
-    clearInterval(intervalRef.current); // Clear any existing timer
-    const countDownTime = Date.now() + 180000; // 3 minutes from now (180000 milliseconds)
+    clearInterval(intervalRef.current);
+    const countDownTime = Date.now() + 180000;
     intervalRef.current = setInterval(() => {
       const now = Date.now();
-      const distance = countDownTime - now; // Time remaining
-
-      // Calculate minutes and seconds
+      const distance = countDownTime - now;
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       if (distance < 0) {
-        // If time runs out, clear interval and end the game
         clearInterval(intervalRef.current);
         setTime({ minutes: 0, seconds: 0, distance: 0 });
-        endGame(); // Call endGame without specific counts (will use current state of relevant data)
+        endGame();
       } else {
-        // Update time state
         setTime({ minutes, seconds, distance });
       }
-    }, 1000); // Update every second
+    }, 1000);
   };
 
-  // Function to play the button sound
   const playButtonSound = () => {
     if (buttonSoundRef.current) buttonSoundRef.current.play();
   };
 
-  // Handler for when a user clicks on an answer option
   const handleOptionClick = (e) => {
     const selectedAnswer = e.target.innerHTML.toLowerCase();
     const correctAnswer = questionsList[currentQuestionIndex].answer.toLowerCase();
@@ -115,73 +146,63 @@ const Play = () => {
     let newCorrectAnswers = correctAnswers;
     let newWrongAnswers = wrongAnswers;
 
-    // Play sound and show toast based on correctness
     if (selectedAnswer === correctAnswer) {
-      correctSound.current.play();
+      if (correctSound.current) correctSound.current.play();
       M.toast({ html: 'Correct Answer!', classes: 'toast-valid', displayLength: 1500 });
       newScore++;
       newCorrectAnswers++;
     } else {
-      wrongSound.current.play();
+      if (wrongSound.current) wrongSound.current.play();
       M.toast({ html: 'Wrong Answer!', classes: 'toast-invalid', displayLength: 1500 });
       newWrongAnswers++;
-      navigator.vibrate(1000); // Vibrate for wrong answer
+      if (navigator.vibrate) navigator.vibrate(1000);
     }
-    
-    // Create a new set to include the current question index
+
     const updatedAnsweredQuestionIndices = new Set(answeredQuestionIndices);
     updatedAnsweredQuestionIndices.add(currentQuestionIndex);
 
-    // Update the state immediately for score, correctAnswers, wrongAnswers, and answeredQuestionIndices
     setScore(newScore);
     setCorrectAnswers(newCorrectAnswers);
     setWrongAnswers(newWrongAnswers);
-    setAnsweredQuestionIndices(updatedAnsweredQuestionIndices); // Update the set state
+    setAnsweredQuestionIndices(updatedAnsweredQuestionIndices);
 
-    // Check if it's the last question
-    if (currentQuestionIndex === questionsList.length - 1) { 
-      // End the game, passing the immediately available correct counts
+    if (currentQuestionIndex === questionsList.length - 1) {
       endGame(newScore, updatedAnsweredQuestionIndices.size, newCorrectAnswers, newWrongAnswers);
     } else {
-      setCurrentQuestionIndex((prev) => prev + 1);
-      resetOptionsVisibility(); // Reset lifeline effects for the next question
+      setCurrentQuestionIndex(prev => prev + 1);
+      resetOptionsVisibility();
     }
   };
 
-  // Function to reset the visibility of options (after 50/50 or hint)
   const resetOptionsVisibility = () => {
     const options = document.querySelectorAll('.option');
-    options.forEach((option) => (option.style.visibility = 'visible'));
-    setUsedFiftyFifty(false); // Reset 50/50 usage flag
-    setPreviousRandomNumbers([]); // Clear previous random numbers for hints
+    options.forEach(option => (option.style.visibility = 'visible'));
+    setUsedFiftyFifty(false);
+    setPreviousRandomNumbers([]);
   };
 
-  // Handler for the "Next" button click
   const handleNextButtonClick = () => {
     playButtonSound();
     if (currentQuestionIndex < questionsList.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+      setCurrentQuestionIndex(prev => prev + 1);
       resetOptionsVisibility();
     }
   };
 
-  // Handler for the "Previous" button click
   const handlePreviousButtonClick = () => {
     playButtonSound();
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
+      setCurrentQuestionIndex(prev => prev - 1);
       resetOptionsVisibility();
     }
   };
 
-  // Handler for the "Quit" button click
   const handleQuitButtonClick = () => {
     playButtonSound();
     clearInterval(intervalRef.current);
     navigate('/');
   };
 
-  // Handler for using a hint
   const handleHints = () => {
     if (hints <= 0) {
       M.toast({ html: 'No hints left!', classes: 'toast-invalid', displayLength: 1500 });
@@ -196,26 +217,24 @@ const Play = () => {
       if (option.innerHTML.toLowerCase() === correctAnswer) indexOfAnswer = index;
     });
 
-    // Hide one wrong option
     while (true) {
       const randomNumber = Math.floor(Math.random() * 4);
       if (randomNumber !== indexOfAnswer && !previousRandomNumbers.includes(randomNumber)) {
         options[randomNumber].style.visibility = 'hidden';
-        setPreviousRandomNumbers((prev) => [...prev, randomNumber]);
-        setHints((prev) => prev - 1);
+        setPreviousRandomNumbers(prev => [...prev, randomNumber]);
+        setHints(prev => prev - 1);
         break;
       }
-      if (previousRandomNumbers.length >= 3) break; // Safety break if all wrong options are hidden
+      if (previousRandomNumbers.length >= 3) break;
     }
   };
 
-  // Handler for using the 50/50 lifeline
   const handleFiftyFifty = () => {
     if (fiftyFifty <= 0) {
       M.toast({ html: 'No 50/50 lifelines left!', classes: 'toast-invalid', displayLength: 1500 });
       return;
     }
-    if (usedFiftyFifty) return; // Prevent using 50/50 multiple times on the same question
+    if (usedFiftyFifty) return;
 
     const options = document.querySelectorAll('.option');
     const correctAnswer = questionsList[currentQuestionIndex].answer.toLowerCase();
@@ -226,7 +245,7 @@ const Play = () => {
     });
 
     const hiddenIndices = [];
-    while (hiddenIndices.length < 2) { // Hide two wrong options
+    while (hiddenIndices.length < 2) {
       const randomNumber = Math.floor(Math.random() * 4);
       if (randomNumber !== indexOfAnswer && !hiddenIndices.includes(randomNumber)) {
         options[randomNumber].style.visibility = 'hidden';
@@ -234,73 +253,86 @@ const Play = () => {
       }
     }
 
-    setFiftyFifty((prev) => prev - 1); // Decrement 50/50 count
-    setUsedFiftyFifty(true); // Mark 50/50 as used for this question
+    setFiftyFifty(prev => prev - 1);
+    setUsedFiftyFifty(true);
   };
 
-  // Function to end the game and navigate to summary
-  // These parameters are optional, used when ending from last question click to ensure latest counts
-  const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWrongAnswers) => {
-    clearInterval(intervalRef.current); // Stop the timer
-    M.toast({ html: 'Quiz ended!', classes: 'toast-info', displayLength: 2000 }); // User feedback
+const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWrongAnswers) => {
+  clearInterval(intervalRef.current);
+  M.toast({ html: 'Quiz ended!', classes: 'toast-info', displayLength: 2000 });
 
-    // Determine the correct number of answered questions to pass to summary
-    // If finalAttemptedCount is passed (from handleOptionClick), use it.
-    // Otherwise, calculate from the current answeredQuestionIndices.
-    const finalNumberOfAnsweredQuestions = finalAttemptedCount !== undefined
-      ? finalAttemptedCount 
-      : answeredQuestionIndices.size; // Fallback to current state for timer expiry etc.
+  const finalNumberOfAnsweredQuestions = finalAttemptedCount !== undefined
+    ? finalAttemptedCount
+    : answeredQuestionIndices.size;
 
-    const finalCalculatedScore = finalScore !== undefined ? finalScore : score;
-    const finalCalculatedCorrectAnswers = finalCorrectAnswers !== undefined ? finalCorrectAnswers : correctAnswers;
-    const finalCalculatedWrongAnswers = finalWrongAnswers !== undefined ? finalWrongAnswers : wrongAnswers;
+  const finalCalculatedScore = finalScore !== undefined ? finalScore : score;
+  const finalCalculatedCorrectAnswers = finalCorrectAnswers !== undefined ? finalCorrectAnswers : correctAnswers;
+  const finalCalculatedWrongAnswers = finalWrongAnswers !== undefined ? finalWrongAnswers : wrongAnswers;
 
-
-    // Prepare player statistics
-    const playerStats = {
-      score: finalCalculatedScore,
-      numberOfQuestions: questionsList.length,
-      numberOfAnsweredQuestions: finalNumberOfAnsweredQuestions, // Use the determined value
-      correctAnswers: finalCalculatedCorrectAnswers,
-      wrongAnswers: finalCalculatedWrongAnswers,
-      fiftyFiftyUsed: 2 - fiftyFifty, // Calculate used lifelines
-      hintsUsed: 5 - hints
-    };
-    // Navigate to the quiz summary page, passing player stats via state
-    navigate('/play/quizSummary', { state: playerStats });
+  const playerStats = {
+    score: finalCalculatedScore,
+    numberOfQuestions: questionsList.length,
+    numberOfAnsweredQuestions: finalNumberOfAnsweredQuestions,
+    correctAnswers: finalCalculatedCorrectAnswers,
+    wrongAnswers: finalCalculatedWrongAnswers,
+    fiftyFiftyUsed: 2 - fiftyFifty,
+    hintsUsed: 5 - hints,
+    category,       // ✅ include category
+    difficulty      // ✅ include difficulty
   };
 
-  // Show loading message if questions are not yet loaded
-  if (questionsList.length === 0) return <p>Loading questions...</p>;
+  // 🔑 Save quiz result here (only once)
+  const token = localStorage.getItem("token");
+  if (token) {
+    fetch(`${API_BASE}/quiz/save`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        category,
+        difficulty,
+        score: finalCalculatedScore
+      })
+    })
+      .then(res => res.json())
+      .then(data => console.log("Quiz saved:", data))
+      .catch(err => console.error("Save quiz error:", err));
+  }
 
-  // Get the current question object
+  // ✅ Then navigate to summary (no duplicate saves!)
+  navigate('/play/quizSummary', { state: playerStats });
+};
+
+
+  if (loading) return <p>Loading questions...</p>;
+  if (questionsList.length === 0) return <p>No questions available.</p>;
+
   const currentQuestion = questionsList[currentQuestionIndex];
 
   return (
     <div>
       <Helmet><title>Quiz Page</title></Helmet>
-      {/* Audio elements for sound effects */}
       <audio ref={correctSound} src={correctNotification}></audio>
       <audio ref={wrongSound} src={wrongNotification}></audio>
       <audio ref={buttonSoundRef} src={buttonSound}></audio>
 
       <div className="questions">
         <h2>Quiz Mode</h2>
-        {/* Lifeline section */}
         <div className="lifeline-container">
           <p>
-            <span onClick={handleFiftyFifty} className="mdi mdi-set-center mdi-24px lifeline-icon" role="button" tabIndex={0}>
+            <span onClick={handleFiftyFifty} className="mdi mdi-set-center mdi-24px lifeline-icon" role="button">
               <span className="lifeline">{fiftyFifty}</span>
             </span>
           </p>
           <p>
-            <span onClick={handleHints} className="mdi mdi-lightbulb-on-outline mdi-24px lifeline-icon" role="button" tabIndex={0}>
+            <span onClick={handleHints} className="mdi mdi-lightbulb-on-outline mdi-24px lifeline-icon" role="button">
               <span className="lifeline">{hints}</span>
             </span>
           </p>
         </div>
 
-        {/* Timer and question progress section */}
         <div className="timer-container">
           <p>
             <span className="left" style={{ float: 'left' }}>
@@ -308,8 +340,8 @@ const Play = () => {
             </span>
             <span
               className={classnames('right valid', {
-                warning: time.distance <= 120000, // Warning if 2 minutes or less
-                invalid: time.distance < 30000, // Invalid if 30 seconds or less
+                warning: time.distance <= 120000,
+                invalid: time.distance < 30000,
               })}
             >
               {time.minutes}:{time.seconds < 10 ? `0${time.seconds}` : time.seconds}
@@ -318,10 +350,8 @@ const Play = () => {
           </p>
         </div>
 
-        {/* Current question text */}
         <h5>{currentQuestion.question}</h5>
 
-        {/* Options container */}
         <div className="options-container">
           <p onClick={handleOptionClick} className="option">{currentQuestion.optionA}</p>
           <p onClick={handleOptionClick} className="option">{currentQuestion.optionB}</p>
@@ -332,7 +362,6 @@ const Play = () => {
           <p onClick={handleOptionClick} className="option">{currentQuestion.optionD}</p>
         </div>
 
-        {/* Navigation buttons */}
         <div className="button-container">
           <button
             className={classnames('', { disable: previousButtonDisabled })}

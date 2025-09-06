@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useLocation } from 'react-router-dom';
 
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+
 const QuizSummary = () => {
   const location = useLocation();
   const [state, setState] = useState({
@@ -40,6 +43,7 @@ const QuizSummary = () => {
         fiftyFiftyUsed: location.state.fiftyFiftyUsed,
         remark: remark
       });
+
     }
   }, [location]);
 

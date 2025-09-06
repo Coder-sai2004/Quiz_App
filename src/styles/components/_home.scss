@@ -131,6 +131,18 @@ $shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2); // Deeper shadow for interaction
     }
   }
 
+  #history{
+      background: linear-gradient(135deg, $secondary-green, darken($secondary-green, 10%)); // Green for register/success
+    &:hover {
+      background: linear-gradient(135deg, darken($secondary-green, 5%), darken($secondary-green, 15%));
+  }}
+
+  #logout{
+     background: linear-gradient(135deg, $danger-red, darken($danger-red, 10%)); // Red for login/danger
+    &:hover {
+      background: linear-gradient(135deg, darken($danger-red, 5%), darken($danger-red, 15%));
+  }}
+
   @media (max-width: 768px) {
     #home section {
       padding: 1.5rem; // Adjusted padding for smaller screens
