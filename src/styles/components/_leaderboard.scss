@@ -1,0 +1,97 @@
+// Shared colors and fonts
+$primary-blue: #5a4d9e;
+$secondary-purple: #667eea;
+$accent-purple: #764ba2;
+$white: #ffffff;
+$neutral-dark: #333333;
+$shadow-medium: 0 6px 15px rgba(118, 75, 162, 0.3);
+$button-radius: 16px;
+$font-family: 'Inter', sans-serif;
+
+.leaderboard-wrapper {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, $secondary-purple, $accent-purple);
+  border-radius: $button-radius;
+  box-shadow: $shadow-medium;
+  color: $white;
+  font-family: $font-family;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.leaderboard-filter {
+  background-color: $white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: $neutral-dark;
+  font-weight: 500;
+  font-family: $font-family;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $white;
+  border-radius: 12px;
+  overflow: hidden;
+  color: $neutral-dark;
+  font-family: $font-family;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid lighten($neutral-dark, 60%);
+  text-align: left;
+  font-weight: 500;
+}
+
+.leaderboard-table th {
+  background-color: $primary-blue;
+  color: $white;
+  font-weight: 700;
+}
+
+.leaderboard-table tbody tr:hover {
+  background-color: lighten($primary-blue, 40%);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Highlight top 3 positions */
+.first-place {
+  background-color: #ffd700 !important; /* Gold */
+  font-weight: bold;
+  color: $neutral-dark;
+}
+
+.second-place {
+  background-color: #c0c0c0 !important; /* Silver */
+  font-weight: bold;
+  color: $neutral-dark;
+}
+
+.third-place {
+  background-color: #cd7f32 !important; /* Bronze */
+  font-weight: bold;
+  color: $neutral-dark;
+}
+
+/* Messages */
+.loading-message,
+.empty-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: $font-family;
+}

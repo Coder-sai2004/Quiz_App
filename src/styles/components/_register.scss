@@ -1,0 +1,72 @@
+// Shared colors and variables
+$primary-blue: #2563eb;
+$neutral-dark: #2d2d2d;
+$white: #ffffff;
+$shadow-light: 0 6px 18px rgba(0, 0, 0, 0.1);
+$button-radius: 9px;
+$font-family: 'Inter', sans-serif;
+
+.register-container {
+    max-width: 420px;
+    margin: 4rem auto;
+    padding: 2rem 2.5rem;
+    background: $white;
+    border-radius: 14px;
+    box-shadow: $shadow-light;
+    font-family: $font-family;
+    color: $neutral-dark;
+}
+
+.register-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin-bottom: 1.4rem;
+    color: $primary-blue;
+    text-align: center;
+}
+
+.register-input {
+    width: 100%;
+    margin-bottom: 1.1rem;
+    padding: 12px 14px;
+    font-size: 1rem;
+    border: 2px solid lighten($neutral-dark, 60%);
+    border-radius: $button-radius;
+    transition: border-color 0.3s ease;
+    font-family: $font-family;
+
+    &:focus {
+        border-color: $primary-blue;
+        outline: none;
+        box-shadow: 0 0 8px rgba($primary-blue, 0.5);
+    }
+}
+
+.register-button {
+    width: 100%;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: $white;
+    background-color: $primary-blue;
+    border: none;
+    border-radius: $button-radius;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    font-family: $font-family;
+
+    &:hover {
+        background-color: darken($primary-blue, 15%);
+    }
+
+    &:active {
+        background-color: darken($primary-blue, 25%);
+    }
+}
+
+.register-message {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 1rem;
+    color: $primary-blue;
+}

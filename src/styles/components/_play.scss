@@ -1,96 +1,84 @@
-// Re-using the color palette and common variables from 'home-scss-updated' Canvas
-$primary-blue: #4A90E2;       // A vibrant, inviting blue
-$secondary-green: #50E3C2;    // A fresh, modern green
-$accent-orange: #F5A623;      // A bright, complementary orange for highlights
-$neutral-dark: #333333;       // Dark charcoal for primary text
-$neutral-light: #F8F8F8;      // Off-white for backgrounds
-$white: #FFFFFF;              // Pure white for text on dark backgrounds
-$danger-red: #D0021B;         // For warnings or negative actions
-$info-blue: #4A90E2;          // For informational buttons (same as primary-blue here)
-$success-green: #28a745;      // A standard success green
+// Shared color palette and variables for consistency
+$primary-blue: #4A90E2;
+$secondary-green: #50E3C2;
+$accent-orange: #F5A623;
+$neutral-dark: #333333;
+$neutral-light: #F8F8F8;
+$white: #FFFFFF;
+$danger-red: #D0021B;
+$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2);
+$button-radius: 8px;
 
-// Font sizes (re-defining for self-containment if not globally imported)
-$lg: 2.5rem; // Example large font size
-$md: 1.5rem; // Medium spacing/font size
-$sm: 1rem;   // Small spacing/font size (used for padding)
-$xs: 0.5rem; // Extra small spacing/font size
-
-// Button and shadow definitions (re-defining for self-containment)
-$button-radius: 8px;          // Slightly more rounded corners
-$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1); // Soft, subtle shadow
-$shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2); // Deeper shadow for interaction
-$shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.25); // Even deeper shadow
-
+// Main questions container
 .questions {
-  background-color: $white; // Clean white background for questions container
-  border-radius: 12px; // Softly rounded corners
-  box-shadow: $shadow-medium; // Add a consistent shadow
-  width: 90%; // Slightly wider for better content display
-  max-width: 800px; // Max width for large screens
-  margin: $lg auto; // Centered with top margin
-  padding: $md; // Generous padding inside
+  background-color: $white;
+  border-radius: 12px;
+  box-shadow: $shadow-medium;
+  width: 90%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center; // Center items horizontally within the container
-  font-family: 'Inter', sans-serif; // Consistent font
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  color: $neutral-dark;
 
   h2 {
-    font-size: 2rem; // Larger and more prominent heading
-    color: $neutral-dark; // Dark text for readability
-    margin-bottom: $md; // Space below the heading
-    font-weight: 700; // Bolder
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: $neutral-dark;
+    text-align: center;
   }
 
   .lifeline-container {
     display: flex;
-    justify-content: space-around; // Evenly space lifelines
-    width: 100%; // Take full width
-    padding: $sm 0;
-    margin-bottom: $md; // Space below lifelines
-    gap: 1rem; // Space between lifeline items
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    padding: 0.5rem 0;
   }
 
   .lifeline {
-    font-size: 1rem; // Adjust font size of lifeline count
+    font-size: 1rem;
     position: relative;
-    top: -2px; // Slightly adjust position
-    left: 2px; // Shift slightly to align with icon
-    color: $neutral-dark; // Make lifeline count readable
+    top: -2px;
+    left: 2px;
     font-weight: 600;
+    color: $neutral-dark;
   }
 
   .lifeline-icon {
-    font-size: 2.5rem; // Larger icons for better visibility
-    color: $primary-blue; // Use primary blue for icons
+    font-size: 2.5rem;
+    color: $primary-blue;
     cursor: pointer;
-    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out; // Smooth transition
     display: flex;
     align-items: center;
-    gap: $xs; // Space between icon and count
+    gap: 0.3rem;
+    transition: color 0.3s ease, transform 0.2s ease;
 
     &:hover {
-      color: $accent-orange; // Change color on hover to accent orange
-      transform: scale(1.1); // Slightly enlarge on hover
+      color: $accent-orange;
+      transform: scale(1.1);
     }
   }
 
-  // Timer container styling for better visibility
   .timer-container {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: $sm 0;
-    margin-bottom: $md;
-    border-bottom: 1px solid rgba($neutral-dark, 0.1); // Subtle separator
-    padding-bottom: $md;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba($neutral-dark, 0.1);
+    margin-bottom: 1.5rem;
 
     p {
       margin: 0;
       width: 100%;
       display: flex;
       justify-content: space-between;
-      align-items: center;
       font-weight: 600;
 
       span {
@@ -101,176 +89,181 @@ $shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.25); // Even deeper shadow
     }
 
     .left {
-      color: $neutral-dark;
       font-size: 1.1rem;
+      color: $neutral-dark;
     }
 
     .right {
       font-size: 1.1rem;
-      color: $secondary-green; // Default green for time
       &.warning {
-        color: $accent-orange; // Orange for warning
+        color: $accent-orange;
       }
       &.invalid {
-        color: $danger-red; // Red for critical time
+        color: $danger-red;
       }
       .mdi-clock-outline {
-        font-size: 1.3rem; // Adjust clock icon size
+        font-size: 1.3rem;
       }
+      color: $secondary-green;
     }
   }
 
   h5 {
-    font-size: 1.4rem; // Slightly larger question text
-    margin-bottom: $lg; // More space below the question
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
     line-height: 1.6;
     text-align: center;
-    color: $neutral-dark; // Dark text for readability
+    color: $neutral-dark;
+    font-weight: 600;
   }
 
   .options-container {
-    display: flex; // Use flexbox for options row
-    flex-wrap: wrap; // Allow wrapping on smaller screens
-    justify-content: space-around; // Space options evenly
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     width: 100%;
-    margin-bottom: $sm; // Space between option rows
-    gap: $md; // Space between individual options
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 
   .option {
-    // Apply gradient and enhanced button styling
     background: linear-gradient(135deg, $primary-blue, darken($primary-blue, 10%));
-    border-radius: 10px; // Slightly more rounded than home buttons
+    border-radius: 10px;
     color: $white;
     cursor: pointer;
-    margin: 0; // Remove auto margin to use flexbox gap
-    padding: 0.8rem 1.2rem; // Consistent padding
-    transition: all 0.3s ease-in-out;
-    text-align: center;
-    width: 48%; // Occupy almost half width, leaving space for gap
+    padding: 0.8rem 1.2rem;
+    width: 48%;
     font-weight: 600;
     letter-spacing: 0.3px;
-    box-shadow: $shadow-light; // Initial subtle shadow
-    
-    &:hover, // Apply to hover
-    &:active { // Apply to active (click)
-      background: $neutral-dark; // Turn black on hover/click
-      color: $white; // Keep text white for readability
-      box-shadow: $shadow-medium; // Deeper shadow on hover/click
-      transform: translateY(-2px); // Subtle lift
+    box-shadow: $shadow-light;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+
+    &:hover,
+    &:active {
+      background: $neutral-dark;
+      box-shadow: $shadow-medium;
+      transform: translateY(-2px);
+      color: $white;
     }
   }
 }
 
+// Button container below questions
 .button-container {
   display: flex;
-  justify-content: center; // Center navigation buttons
-  margin: $md auto; // Add consistent margin
-  padding: $sm;
-  width: 90%; // Match questions container width
-  max-width: 800px; // Match max width
-  gap: $md; // Space between buttons
+  justify-content: center;
+  margin: 1.5rem auto;
+  padding: 0.5rem;
+  width: 90%;
+  max-width: 800px;
+  gap: 1rem;
+
+  button {
+    border: none;
+    border-radius: $button-radius;
+    padding: 0.7rem 1.4rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    color: $white;
+    box-shadow: $shadow-light;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      box-shadow: $shadow-medium;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    &.disable {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+  }
+
+  // Specific button colors
+  button:first-child {
+    background: linear-gradient(135deg, lighten($neutral-dark, 15%), $neutral-dark);
+
+    &:hover {
+      background: linear-gradient(135deg, lighten($neutral-dark, 10%), darken($neutral-dark, 5%));
+    }
+  }
+
+  button:nth-child(2) {
+    background: linear-gradient(135deg, $secondary-green, darken($secondary-green, 10%));
+
+    &:hover {
+      background: linear-gradient(135deg, darken($secondary-green, 5%), darken($secondary-green, 15%));
+    }
+  }
+
+  button:last-child {
+    background: linear-gradient(135deg, $danger-red, darken($danger-red, 10%));
+    &:hover {
+      background: linear-gradient(135deg, darken($danger-red, 5%), darken($danger-red, 15%));
+    }
+  }
 }
 
-.button-container button {
-  border: none;
-  color: $white;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif; // Consistent font
-  border-radius: 8px; // Rounded corners for buttons
-  padding: 0.7rem 1.4rem; // Consistent padding
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease-in-out;
-  box-shadow: $shadow-light;
-
-  &:hover {
-    box-shadow: $shadow-medium;
-    transform: translateY(-2px);
-  }
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  &.disable { // Styling for disabled buttons
-    opacity: 0.6;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-  }
-}
-
-// Specific button styles
-.button-container button:first-child { // Previous button
-  background: linear-gradient(135deg, lighten($neutral-dark, 15%), $neutral-dark); // Darker tone for previous
-  &:hover {
-    background: linear-gradient(135deg, lighten($neutral-dark, 10%), darken($neutral-dark, 5%));
-  }
-}
-
-.button-container button:nth-child(2) { // Next button
-  background: linear-gradient(135deg, $secondary-green, darken($secondary-green, 10%)); // Vibrant green for next
-  &:hover {
-    background: linear-gradient(135deg, darken($secondary-green, 5%), darken($secondary-green, 15%));
-  }
-}
-
-.button-container button:last-child { // Quit button
-  background: linear-gradient(135deg, $danger-red, darken($danger-red, 10%)); // Warning red for quit
-  &:hover {
-    background: linear-gradient(135deg, darken($danger-red, 5%), darken($danger-red, 15%));
-  }
-}
-
-
-// Media queries for responsiveness
+// Responsive adjustments
 @media (max-width: 768px) {
   .questions {
-    width: 95%; // Take more width on smaller screens
-    padding: 1rem; // Reduced padding
-    margin-top: $md;
-  }
+    width: 95%;
+    padding: 1rem;
+    margin-top: 1rem;
 
-  .questions h2 {
-    font-size: 1.7rem; // Smaller heading
-  }
+    h2 {
+      font-size: 1.7rem;
+    }
 
-  .questions h5 {
-    font-size: 1.2rem; // Smaller question text
-    margin-bottom: $md;
-  }
+    h5 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
 
-  .questions .options-container {
-    flex-direction: column; // Stack options vertically
-    gap: 0.8rem; // Smaller gap
-  }
+    .options-container {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
 
-  .questions .option {
-    width: 95%; // Full width for options
-    padding: 0.7rem 1rem; // Adjusted padding
+    .option {
+      width: 95%;
+      padding: 0.7rem 1rem;
+    }
   }
 
   .button-container {
-    flex-direction: column; // Stack buttons vertically
-    width: 95%; // Full width
-    gap: 0.8rem; // Smaller gap
-    padding: $sm;
-  }
+    flex-direction: column;
+    width: 95%;
+    gap: 0.8rem;
+    padding: 0.5rem;
 
-  .button-container button {
-    width: 100%; // Full width for stacked buttons
-    padding: 0.8rem 1rem;
+    button {
+      width: 100%;
+      padding: 0.8rem 1rem;
+    }
   }
 }
 
 @media (max-width: 480px) {
-  .questions .lifeline-icon {
-    font-size: 2rem; // Even smaller lifeline icons
-  }
-  .questions .lifeline {
-    font-size: 0.9rem;
-  }
-  .questions .right, .questions .left {
-    font-size: 1rem; // Smaller time text
+  .questions {
+    .lifeline-icon {
+      font-size: 2rem;
+    }
+    .lifeline {
+      font-size: 0.9rem;
+    }
+    .right, .left {
+      font-size: 1rem;
+    }
   }
 }

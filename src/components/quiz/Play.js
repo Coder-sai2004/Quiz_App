@@ -4,13 +4,8 @@ import M from 'materialize-css';
 import classnames from 'classnames';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import correctNotification from '../../assets/audio/correct-answer.mp3';
-import wrongNotification from '../../assets/audio/wrong-answer.mp3';
-import buttonSound from '../../assets/audio/button-sound.mp3';
-
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 console.log("API_BASE is:", API_BASE);
-
 
 // shuffle fallback (keeps old behavior)
 const shuffleArray = (array) => {
@@ -42,9 +37,6 @@ const Play = () => {
   const [previousButtonDisabled, setPreviousButtonDisabled] = useState(true);
 
   const navigate = useNavigate();
-  const correctSound = useRef(null);
-  const wrongSound = useRef(null);
-  const buttonSoundRef = useRef(null);
   const intervalRef = useRef(null);
 
   // Build the fetch URL
@@ -75,7 +67,6 @@ const Play = () => {
           return;
         }
 
-        // shuffle client-side too (backup)
         const randomQuestions = shuffleArray(data).slice(0, 15);
 
         setQuestionsList(randomQuestions);
@@ -134,10 +125,6 @@ const Play = () => {
     }, 1000);
   };
 
-  const playButtonSound = () => {
-    if (buttonSoundRef.current) buttonSoundRef.current.play();
-  };
-
   const handleOptionClick = (e) => {
     const selectedAnswer = e.target.innerHTML.toLowerCase();
     const correctAnswer = questionsList[currentQuestionIndex].answer.toLowerCase();
@@ -147,15 +134,13 @@ const Play = () => {
     let newWrongAnswers = wrongAnswers;
 
     if (selectedAnswer === correctAnswer) {
-      if (correctSound.current) correctSound.current.play();
       M.toast({ html: 'Correct Answer!', classes: 'toast-valid', displayLength: 1500 });
       newScore++;
       newCorrectAnswers++;
     } else {
-      if (wrongSound.current) wrongSound.current.play();
       M.toast({ html: 'Wrong Answer!', classes: 'toast-invalid', displayLength: 1500 });
       newWrongAnswers++;
-      if (navigator.vibrate) navigator.vibrate(1000);
+      // vibration removed here
     }
 
     const updatedAnsweredQuestionIndices = new Set(answeredQuestionIndices);
@@ -182,7 +167,6 @@ const Play = () => {
   };
 
   const handleNextButtonClick = () => {
-    playButtonSound();
     if (currentQuestionIndex < questionsList.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       resetOptionsVisibility();
@@ -190,7 +174,6 @@ const Play = () => {
   };
 
   const handlePreviousButtonClick = () => {
-    playButtonSound();
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
       resetOptionsVisibility();
@@ -198,7 +181,6 @@ const Play = () => {
   };
 
   const handleQuitButtonClick = () => {
-    playButtonSound();
     clearInterval(intervalRef.current);
     navigate('/');
   };
@@ -257,54 +239,51 @@ const Play = () => {
     setUsedFiftyFifty(true);
   };
 
-const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWrongAnswers) => {
-  clearInterval(intervalRef.current);
-  M.toast({ html: 'Quiz ended!', classes: 'toast-info', displayLength: 2000 });
+  const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWrongAnswers) => {
+    clearInterval(intervalRef.current);
+    M.toast({ html: 'Quiz ended!', classes: 'toast-info', displayLength: 2000 });
 
-  const finalNumberOfAnsweredQuestions = finalAttemptedCount !== undefined
-    ? finalAttemptedCount
-    : answeredQuestionIndices.size;
+    const finalNumberOfAnsweredQuestions = finalAttemptedCount !== undefined
+      ? finalAttemptedCount
+      : answeredQuestionIndices.size;
 
-  const finalCalculatedScore = finalScore !== undefined ? finalScore : score;
-  const finalCalculatedCorrectAnswers = finalCorrectAnswers !== undefined ? finalCorrectAnswers : correctAnswers;
-  const finalCalculatedWrongAnswers = finalWrongAnswers !== undefined ? finalWrongAnswers : wrongAnswers;
+    const finalCalculatedScore = finalScore !== undefined ? finalScore : score;
+    const finalCalculatedCorrectAnswers = finalCorrectAnswers !== undefined ? finalCorrectAnswers : correctAnswers;
+    const finalCalculatedWrongAnswers = finalWrongAnswers !== undefined ? finalWrongAnswers : wrongAnswers;
 
-  const playerStats = {
-    score: finalCalculatedScore,
-    numberOfQuestions: questionsList.length,
-    numberOfAnsweredQuestions: finalNumberOfAnsweredQuestions,
-    correctAnswers: finalCalculatedCorrectAnswers,
-    wrongAnswers: finalCalculatedWrongAnswers,
-    fiftyFiftyUsed: 2 - fiftyFifty,
-    hintsUsed: 5 - hints,
-    category,       // ✅ include category
-    difficulty      // ✅ include difficulty
-  };
+    const playerStats = {
+      score: finalCalculatedScore,
+      numberOfQuestions: questionsList.length,
+      numberOfAnsweredQuestions: finalNumberOfAnsweredQuestions,
+      correctAnswers: finalCalculatedCorrectAnswers,
+      wrongAnswers: finalCalculatedWrongAnswers,
+      fiftyFiftyUsed: 2 - fiftyFifty,
+      hintsUsed: 5 - hints,
+      category,
+      difficulty
+    };
 
-  // 🔑 Save quiz result here (only once)
-  const token = localStorage.getItem("token");
-  if (token) {
-    fetch(`${API_BASE}/quiz/save`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({
-        category,
-        difficulty,
-        score: finalCalculatedScore
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`${API_BASE}/quiz/save`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+          category,
+          difficulty,
+          score: finalCalculatedScore
+        })
       })
-    })
-      .then(res => res.json())
-      .then(data => console.log("Quiz saved:", data))
-      .catch(err => console.error("Save quiz error:", err));
-  }
+        .then(res => res.json())
+        .then(data => console.log("Quiz saved:", data))
+        .catch(err => console.error("Save quiz error:", err));
+    }
 
-  // ✅ Then navigate to summary (no duplicate saves!)
-  navigate('/play/quizSummary', { state: playerStats });
-};
-
+    navigate('/play/quizSummary', { state: playerStats });
+  };
 
   if (loading) return <p>Loading questions...</p>;
   if (questionsList.length === 0) return <p>No questions available.</p>;
@@ -314,9 +293,6 @@ const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWron
   return (
     <div>
       <Helmet><title>Quiz Page</title></Helmet>
-      <audio ref={correctSound} src={correctNotification}></audio>
-      <audio ref={wrongSound} src={wrongNotification}></audio>
-      <audio ref={buttonSoundRef} src={buttonSound}></audio>
 
       <div className="questions">
         <h2>Quiz Mode</h2>
@@ -366,7 +342,7 @@ const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWron
           <button
             className={classnames('', { disable: previousButtonDisabled })}
             id="previous-button"
-            onClick={() => { playButtonSound(); handlePreviousButtonClick(); }}
+            onClick={handlePreviousButtonClick}
             disabled={previousButtonDisabled}
           >
             Previous
@@ -375,7 +351,7 @@ const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWron
           <button
             className={classnames('', { disable: nextButtonDisabled })}
             id="next-button"
-            onClick={() => { playButtonSound(); handleNextButtonClick(); }}
+            onClick={handleNextButtonClick}
             disabled={nextButtonDisabled}
           >
             Next
@@ -383,7 +359,7 @@ const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWron
 
           <button
             id="quit-button"
-            onClick={() => { playButtonSound(); handleQuitButtonClick(); }}
+            onClick={handleQuitButtonClick}
           >
             Quit
           </button>

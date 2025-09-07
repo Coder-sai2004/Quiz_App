@@ -1,8 +1,15 @@
-*{
+/* Reset */
+* {
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family: $quicksand;
+/* Base font and body */
+body {
+    font-family: 'Inter', 'Roboto', 'Poppins', sans-serif;
+    background-color: #f8f8f8;
+    color: #333333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }

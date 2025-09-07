@@ -1,0 +1,55 @@
+// Shared colors and font for consistency
+$neutral-dark: #333333;
+$neutral-light: #f9fafb;
+$primary-blue: #4A90E2;
+$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.08);
+$button-radius: 12px;
+$font-family: 'Inter', sans-serif;
+
+.history-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: $neutral-light;
+  border-radius: $button-radius;
+  box-shadow: $shadow-light;
+  font-family: $font-family;
+  color: $neutral-dark;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.history-table th,
+.history-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid lighten($neutral-dark, 60%);
+  text-align: left;
+  font-weight: 500;
+}
+
+.history-table th {
+  background-color: $primary-blue;
+  color: $white;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.history-table tbody tr:hover {
+  background-color: lighten($primary-blue, 45%);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.loading-text,
+.no-history-text {
+  text-align: center;
+  font-size: 1.2rem;
+  color: lighten($neutral-dark, 30%);
+  margin-top: 3rem;
+  font-family: $font-family;
+}

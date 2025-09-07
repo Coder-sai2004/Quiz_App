@@ -1,32 +1,125 @@
-//fonts
-$quicksand : "Quicksand", sans-serif;
+// Fonts
+$quicksand: "Quicksand", sans-serif;
+$inter-font: "Inter", sans-serif;
 
+// Colors
+$primary-blue: #4A90E2;
+$secondary-green: #50E3C2;
+$accent-orange: #F5A623;
+$danger-red: #D0021B;
+$neutral-dark: #333333;
+$neutral-light: #F8F8F8;
+$white: #FFFFFF;
+$black: #000000;
 
-//colors
-$orange:#ffa500;
-$green : #57b846;
-$red :#ea4355;
-$blue :#1da1f2;
-$white :#f8f8f8;
-$off-black:black;
-
-//size
+// Font sizes
 $xs: 0.5rem;
+$sm: 1rem;
 $normal: 1rem;
-$sm: 1.5rem;
-$md: 2rem;
-$lg: 3rem;
+$md: 1.5rem;
+$lg: 2.5rem;
 $xlg: 5rem;
 $xxlg: 7rem;
 
-//button-radius
-$button-radius: 30px;
+// Button radius
+$button-radius: 10px;
 
-//breakpoints
+// Shadows
+$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2);
+$shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.25);
+
+// Breakpoints
 $lg-bp: 1024px;
 $md-bp: 768px;
-$sm-bp: 641px;
+$sm-bp: 640px;
 $xs-bp: 480px;
 
-//shadow
-$shadow : 0 2px 2px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px rgba(0,0,0,0.2);
+// Button base style for consistency
+.button-base {
+    cursor: pointer;
+    border-radius: $button-radius;
+    padding: 0.8rem 1.5rem;
+    font-family: $inter-font;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: $shadow-light;
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    user-select: none;
+    border: none;
+    display: inline-block;
+    text-decoration: none;
+    min-width: 150px;
+
+    &:hover {
+        box-shadow: $shadow-medium;
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+}
+
+// Responsive fixes and improvements
+@media (max-width: $md-bp) {
+
+    /* Make buttons full width and stack vertically */
+    .button-base {
+        width: 100% !important;
+        min-width: unset !important;
+        margin-bottom: 0.8rem;
+    }
+
+    /* Containers padding adjustment */
+    .container,
+    .questions,
+    .instructions,
+    .category-container,
+    .quiz-summary,
+    .admin-panel-container,
+    .register-container,
+    .login-container,
+    .history-container,
+    .leaderboard-wrapper {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        max-width: 95% !important;
+    }
+
+    /* Font and layout adjustments */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        word-wrap: break-word;
+    }
+
+    /* Buttons/text */
+    a,
+    button {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: $sm-bp) {
+    body {
+        font-size: 0.9rem;
+    }
+
+    .button-base {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.95rem !important;
+    }
+}
+
+@media (max-width: $xs-bp) {
+    .button-base {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem !important;
+    }
+}

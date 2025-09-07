@@ -1,141 +1,125 @@
-// Re-using the color palette and common variables from previous Canvases
-$primary-blue: #4A90E2;       // A vibrant, inviting blue
-$secondary-green: #50E3C2;    // A fresh, modern green
-$accent-orange: #F5A623;      // A bright, complementary orange for highlights
-$neutral-dark: #333333;       // Dark charcoal for primary text
-$neutral-light: #F8F8F8;      // Off-white for backgrounds
-$white: #FFFFFF;              // Pure white for text on dark backgrounds
-$danger-red: #D0021B;         // For warnings or negative actions
-$info-blue: #4A90E2;          // For informational buttons (same as primary-blue here)
-$success-green: #28a745;      // A standard success green
-
-// Font sizes
-$xxlg: 6rem;
-$lg: 2.5rem;
-$md: 1.5rem;
-$sm: 1rem;
-$xs: 0.5rem;
-$normal: 1rem;
-
-// Button and shadow definitions
-$button-radius: 8px;
+// Shared colors and variables for consistency
+$primary-blue: #4A90E2;
+$secondary-green: #50E3C2;
+$accent-orange: #F5A623;
+$neutral-dark: #333333;
+$neutral-light: #F8F8F8;
+$white: #FFFFFF;
 $shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1);
 $shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2);
-$shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.25);
-
-// Breakpoints
-$md-bp: 768px;
+$button-radius: 8px;
 
 .instructions {
-  background-color: $white; // Clean white background
-  border-radius: 12px; // Consistent rounded corners
-  box-shadow: $shadow-medium; // Add a consistent shadow
-  width: 90%; // Responsive width
-  max-width: 800px; // Max width for larger screens
-  margin: $lg auto; // Centered with top/bottom margin
-  padding: $lg; // Generous padding inside
-  font-family: 'Inter', sans-serif; // Consistent font
+  background-color: $white;
+  border-radius: 12px;
+  box-shadow: $shadow-medium;
+  width: 90%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center; // Center content horizontally
+  align-items: center;
+  color: $neutral-dark;
 
   h1 {
-    color: $neutral-dark; // Dark text for readability
-    font-size: $lg; // Larger for prominence
+    color: $neutral-dark;
+    font-size: 2.5rem;
     text-align: center;
-    margin-top: 0; // Reset default margin
-    margin-bottom: $md; // Space below heading
-    font-weight: 700; // Bolder for main title
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
   }
 
-  // Assuming .lifeline and .lifeline-icon styles are for examples within instructions
-  // They should be consistent with how they appear in the .questions section.
   .lifeline {
-    font-size: 1rem; // Adjust font size of lifeline count
+    font-size: 1rem;
     position: relative;
     top: -2px;
     left: 2px;
-    color: $neutral-dark; // Make count readable
+    color: $neutral-dark;
     font-weight: 600;
   }
 
   .lifeline-icon {
-    font-size: 2.5rem; // Larger icons for better visibility
-    color: $primary-blue; // Use primary blue for icons
+    font-size: 2.5rem;
+    color: $primary-blue;
     cursor: pointer;
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    display: flex; // To align icon and text if they are in the same div
+    display: flex;
     align-items: center;
-    gap: $xs; // Space between icon and count
+    gap: 0.25rem;
 
     &:hover {
-      color: $accent-orange; // Change color on hover
-      transform: scale(1.1); // Slightly enlarge
+      color: $accent-orange;
+      transform: scale(1.1);
     }
   }
 
   .browser-default {
-    // Styling for unordered/ordered lists within instructions
-    padding-left: 20px; // Standard indentation for lists
-    margin-top: $sm;
-    margin-bottom: $md;
-    color: $neutral-dark; // Consistent text color
-    line-height: 1.6; // Better readability for list items
-    font-size: 1.1rem; // Slightly larger font for instructions
-    width: 100%; // Take full width of parent
-    box-sizing: border-box; // Include padding in width calculation
-  }
-  
-  .browser-default li {
-      margin-bottom: 0.5rem; // Space between list items
+    padding-left: 20px;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    color: $neutral-dark;
+    line-height: 1.6;
+    font-size: 1.1rem;
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: 500;
+
+    li {
+      margin-bottom: 0.5rem;
+    }
   }
 
   img {
-    display: block; // Ensure image is a block element for margin: auto
-    max-width: 100%; // Ensure image is responsive and doesn't overflow
-    height: auto; // Maintain aspect ratio
-    border-radius: 8px; // Softly rounded image corners
-    box-shadow: $shadow-light; // Subtle shadow for images
-    margin: $md auto; // Center images with top/bottom margin
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: $shadow-light;
+    margin: 1.5rem auto;
   }
-} 
+}
 
-@media (max-width: $md-bp) {
+/* Responsive tweaks */
+@media (max-width: 768px) {
   .instructions {
-    padding: $md; // Adjust padding for mobile
-    width: 95%; // Take more width on smaller screens
-    margin: $md auto; // Adjusted margins
-  }
+    padding: 1.5rem;
+    width: 95%;
 
-  .instructions h1 {
-    font-size: 1.8rem; // Smaller heading on mobile
-    margin-bottom: $sm;
-  }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
 
-  .instructions .lifeline-icon {
-    font-size: 2rem; // Smaller lifeline icons on mobile
-  }
+    .lifeline-icon {
+      font-size: 2rem;
+    }
 
-  .instructions .browser-default {
-    padding-left: 15px; // Adjust list indentation
-    font-size: 1rem; // Standard font size for mobile
-  }
+    .browser-default {
+      padding-left: 15px;
+      font-size: 1rem;
+    }
 
-  .instructions img {
-    width: 95% !important; // Adjust width more precisely for mobile
-    height: auto !important; // Ensure aspect ratio is maintained
-    margin: $sm auto; // Adjusted image margins
+    img {
+      width: 95% !important;
+      height: auto !important;
+      margin: 1rem auto;
+    }
   }
 }
 
 @media (max-width: 480px) {
-    .instructions {
-        padding: $sm;
+  .instructions {
+    padding: 1rem;
+
+    h1 {
+      font-size: 1.5rem;
     }
-    .instructions h1 {
-        font-size: 1.5rem;
+
+    .browser-default {
+      font-size: 0.95rem;
     }
-    .instructions .browser-default {
-        font-size: 0.95rem;
-    }
+  }
 }
