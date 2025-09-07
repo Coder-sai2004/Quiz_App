@@ -5,9 +5,8 @@ import classnames from 'classnames';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-console.log("API_BASE is:", API_BASE);
 
-// shuffle fallback (keeps old behavior)
+// shuffle fallback
 const shuffleArray = (array) => {
   let newArray = array.slice();
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -31,7 +30,7 @@ const Play = () => {
   const [fiftyFifty, setFiftyFifty] = useState(2);
   const [usedFiftyFifty, setUsedFiftyFifty] = useState(false);
   const [previousRandomNumbers, setPreviousRandomNumbers] = useState([]);
-  const [time, setTime] = useState({ minutes: 0, seconds: 0, distance: 0 });
+  const [time, setTime] = useState({ minutes: 0, seconds: 15, distance: 15000 });
   const [answeredQuestionIndices, setAnsweredQuestionIndices] = useState(new Set());
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
   const [previousButtonDisabled, setPreviousButtonDisabled] = useState(true);
@@ -39,7 +38,7 @@ const Play = () => {
   const navigate = useNavigate();
   const intervalRef = useRef(null);
 
-  // Build the fetch URL
+  // Build fetch URL
   const buildUrl = () => {
     const params = [];
     if (category) params.push(`category=${encodeURIComponent(category)}`);
@@ -48,11 +47,10 @@ const Play = () => {
     return `${API_BASE}/api/questions${params.length ? `?${params.join('&')}` : ''}`;
   };
 
-  // fetch questions from backend
+  // Fetch questions
   useEffect(() => {
     const url = buildUrl();
     console.log('Fetching questions from:', url);
-
     let didCancel = false;
 
     fetch(url)
@@ -82,7 +80,7 @@ const Play = () => {
         setNextButtonDisabled(false);
         setPreviousButtonDisabled(true);
 
-        if (randomQuestions.length > 0) startTimer();
+        if (randomQuestions.length > 0) startQuestionTimer();
         setLoading(false);
 
         if (randomQuestions.length === 0) {
@@ -106,26 +104,47 @@ const Play = () => {
     setNextButtonDisabled(currentQuestionIndex === questionsList.length - 1);
   }, [currentQuestionIndex, questionsList.length]);
 
-  const startTimer = () => {
+  // Per-question 15-second timer
+  const startQuestionTimer = () => {
     clearInterval(intervalRef.current);
-    const countDownTime = Date.now() + 180000;
-    intervalRef.current = setInterval(() => {
-      const now = Date.now();
-      const distance = countDownTime - now;
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    let secondsLeft = 15;
 
-      if (distance < 0) {
+    setTime({ minutes: 0, seconds: secondsLeft, distance: secondsLeft * 1000 });
+
+    intervalRef.current = setInterval(() => {
+      secondsLeft--;
+      setTime({ minutes: 0, seconds: secondsLeft, distance: secondsLeft * 1000 });
+
+      if (secondsLeft <= 0) {
         clearInterval(intervalRef.current);
-        setTime({ minutes: 0, seconds: 0, distance: 0 });
-        endGame();
-      } else {
-        setTime({ minutes, seconds, distance });
+        handleTimeUp();
       }
     }, 1000);
   };
 
+  const handleTimeUp = () => {
+    const updatedAnsweredQuestionIndices = new Set(answeredQuestionIndices);
+    updatedAnsweredQuestionIndices.add(currentQuestionIndex);
+    setAnsweredQuestionIndices(updatedAnsweredQuestionIndices);
+
+    if (currentQuestionIndex === questionsList.length - 1) {
+      endGame(score, correctAnswers, wrongAnswers);
+    } else {
+      setCurrentQuestionIndex(prev => prev + 1);
+      resetOptionsVisibility();
+    }
+  };
+
+  useEffect(() => {
+    if (questionsList.length > 0) {
+      startQuestionTimer();
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [currentQuestionIndex, questionsList]);
+
   const handleOptionClick = (e) => {
+    clearInterval(intervalRef.current);
+
     const selectedAnswer = e.target.innerHTML.toLowerCase();
     const correctAnswer = questionsList[currentQuestionIndex].answer.toLowerCase();
 
@@ -134,13 +153,10 @@ const Play = () => {
     let newWrongAnswers = wrongAnswers;
 
     if (selectedAnswer === correctAnswer) {
-      M.toast({ html: 'Correct Answer!', classes: 'toast-valid', displayLength: 1500 });
       newScore++;
       newCorrectAnswers++;
     } else {
-      M.toast({ html: 'Wrong Answer!', classes: 'toast-invalid', displayLength: 1500 });
       newWrongAnswers++;
-      // vibration removed here
     }
 
     const updatedAnsweredQuestionIndices = new Set(answeredQuestionIndices);
@@ -152,7 +168,7 @@ const Play = () => {
     setAnsweredQuestionIndices(updatedAnsweredQuestionIndices);
 
     if (currentQuestionIndex === questionsList.length - 1) {
-      endGame(newScore, updatedAnsweredQuestionIndices.size, newCorrectAnswers, newWrongAnswers);
+      endGame(newScore, newCorrectAnswers, newWrongAnswers);
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       resetOptionsVisibility();
@@ -239,24 +255,22 @@ const Play = () => {
     setUsedFiftyFifty(true);
   };
 
-  const endGame = (finalScore, finalAttemptedCount, finalCorrectAnswers, finalWrongAnswers) => {
+  // Updated endGame to handle skipped questions
+  const endGame = (finalScore, finalCorrectAnswers, finalWrongAnswers) => {
     clearInterval(intervalRef.current);
     M.toast({ html: 'Quiz ended!', classes: 'toast-info', displayLength: 2000 });
 
-    const finalNumberOfAnsweredQuestions = finalAttemptedCount !== undefined
-      ? finalAttemptedCount
-      : answeredQuestionIndices.size;
-
-    const finalCalculatedScore = finalScore !== undefined ? finalScore : score;
-    const finalCalculatedCorrectAnswers = finalCorrectAnswers !== undefined ? finalCorrectAnswers : correctAnswers;
-    const finalCalculatedWrongAnswers = finalWrongAnswers !== undefined ? finalWrongAnswers : wrongAnswers;
+    const totalQuestions = questionsList.length;
+    const finalNumberOfAnsweredQuestions = finalCorrectAnswers + finalWrongAnswers;
+    const skippedQuestions = totalQuestions - finalNumberOfAnsweredQuestions;
 
     const playerStats = {
-      score: finalCalculatedScore,
-      numberOfQuestions: questionsList.length,
+      score: finalScore,
+      numberOfQuestions: totalQuestions,
       numberOfAnsweredQuestions: finalNumberOfAnsweredQuestions,
-      correctAnswers: finalCalculatedCorrectAnswers,
-      wrongAnswers: finalCalculatedWrongAnswers,
+      correctAnswers: finalCorrectAnswers,
+      wrongAnswers: finalWrongAnswers,
+      skippedQuestions: skippedQuestions,
       fiftyFiftyUsed: 2 - fiftyFifty,
       hintsUsed: 5 - hints,
       category,
@@ -274,7 +288,7 @@ const Play = () => {
         body: JSON.stringify({
           category,
           difficulty,
-          score: finalCalculatedScore
+          score: finalScore
         })
       })
         .then(res => res.json())
@@ -316,8 +330,8 @@ const Play = () => {
             </span>
             <span
               className={classnames('right valid', {
-                warning: time.distance <= 120000,
-                invalid: time.distance < 30000,
+                warning: time.seconds <= 10,
+                invalid: time.seconds <= 5,
               })}
             >
               {time.minutes}:{time.seconds < 10 ? `0${time.seconds}` : time.seconds}
@@ -339,23 +353,6 @@ const Play = () => {
         </div>
 
         <div className="button-container">
-          <button
-            className={classnames('', { disable: previousButtonDisabled })}
-            id="previous-button"
-            onClick={handlePreviousButtonClick}
-            disabled={previousButtonDisabled}
-          >
-            Previous
-          </button>
-
-          <button
-            className={classnames('', { disable: nextButtonDisabled })}
-            id="next-button"
-            onClick={handleNextButtonClick}
-            disabled={nextButtonDisabled}
-          >
-            Next
-          </button>
 
           <button
             id="quit-button"

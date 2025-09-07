@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useLocation } from 'react-router-dom';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
-
 const QuizSummary = () => {
   const location = useLocation();
   const [state, setState] = useState({
@@ -13,6 +10,7 @@ const QuizSummary = () => {
     numberOfAnsweredQuestions: 0,
     correctAnswers: 0,
     wrongAnswers: 0,
+    skippedQuestions: 0,
     hintsUsed: 0,
     fiftyFiftyUsed: 0,
     remark: ''
@@ -39,11 +37,11 @@ const QuizSummary = () => {
         numberOfAnsweredQuestions: location.state.numberOfAnsweredQuestions,
         correctAnswers: location.state.correctAnswers,
         wrongAnswers: location.state.wrongAnswers,
+        skippedQuestions: location.state.skippedQuestions,
         hintsUsed: location.state.hintsUsed,
         fiftyFiftyUsed: location.state.fiftyFiftyUsed,
         remark: remark
       });
-
     }
   }, [location]);
 
@@ -58,6 +56,7 @@ const QuizSummary = () => {
         <div className="container stats">
           <h4>{state.remark}</h4>
           <h2>Your Score: {state.score.toFixed(0)}&#37;</h2>
+
           <span className="stat left">Total number of questions: </span>
           <span className="right">{state.numberOfQuestions}</span><br />
 
@@ -65,10 +64,13 @@ const QuizSummary = () => {
           <span className="right">{state.numberOfAnsweredQuestions}</span><br />
 
           <span className="stat left">Number of Correct Answers: </span>
-          <span className="right">{state.correctAnswers}</span> <br />
+          <span className="right">{state.correctAnswers}</span><br />
 
           <span className="stat left">Number of Wrong Answers: </span>
           <span className="right">{state.wrongAnswers}</span><br />
+
+          <span className="stat left">Number of Skipped Questions: </span>
+          <span className="right">{state.skippedQuestions}</span><br />
 
           <span className="stat left">Hints Used: </span>
           <span className="right">{state.hintsUsed}</span><br />
@@ -79,7 +81,7 @@ const QuizSummary = () => {
         <section>
           <ul>
             <li>
-              <Link to="/play/quiz">Play Again</Link>
+              <Link to="/play/CategoryDifficultySelection">Play Again</Link>
             </li>
             <li>
               <Link to="/">Back to Home</Link>

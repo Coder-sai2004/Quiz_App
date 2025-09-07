@@ -12,7 +12,6 @@ const CategoryDifficultySelection = () => {
   const [difficulties, setDifficulties] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch categories & difficulties from backend
   useEffect(() => {
     fetch(`${API_BASE}/api/meta`)
       .then(res => res.json())
@@ -40,52 +39,44 @@ const CategoryDifficultySelection = () => {
   }
 
   return (
-    <div className="category-container" style={{ padding: '20px' }}>
+    <div className="category-container">
       <Helmet>
         <title>Select Category & Difficulty - Quiz App</title>
       </Helmet>
 
-      <h2>Select your Quiz Preferences</h2>
+      <h2 className="category-heading">Select your Quiz Preferences</h2>
 
-      <div className="input-field" style={{ marginBottom: '20px' }}>
-        <label htmlFor="category">Category:</label><br /><br />
-        <select
-          id="category"
-          value={category}
-          onChange={e => setCategory(e.target.value)}
-          style={{ display: 'block', width: '100%', padding: '8px' }}
-        >
-          <option value="">-- Select Category --</option>
+      <div className="input-field">
+        <p className="select-label">Category:</p><br></br><br></br>
+        <div className="button-group">
           {categories.map(cat => (
-            <option key={cat} value={cat}>
+            <button
+              key={cat}
+              className={`option-btn ${category === cat ? 'active' : ''}`}
+              onClick={() => setCategory(cat)}
+            >
               {cat.charAt(0).toUpperCase() + cat.slice(1)}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
 
-      <div className="input-field" style={{ marginBottom: '20px' }}>
-        <label htmlFor="difficulty">Difficulty:</label><br /><br />
-        <select
-          id="difficulty"
-          value={difficulty}
-          onChange={e => setDifficulty(e.target.value)}
-          style={{ display: 'block', width: '100%', padding: '8px' }}
-        >
-          <option value="">-- Select Difficulty --</option>
+      <div className="input-field">
+        <p className="select-label">Difficulty:</p><br></br><br></br>
+        <div className="button-group">
           {difficulties.map(diff => (
-            <option key={diff} value={diff}>
+            <button
+              key={diff}
+              className={`option-btn ${difficulty === diff ? 'active' : ''}`}
+              onClick={() => setDifficulty(diff)}
+            >
               {diff.charAt(0).toUpperCase() + diff.slice(1)}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
 
-      <button
-        className="next-btn"
-        onClick={handleStart}
-        style={{ padding: '10px 20px', cursor: 'pointer' }}
-      >
+      <button className="next-btn" onClick={handleStart}>
         Next: Instructions
       </button>
     </div>

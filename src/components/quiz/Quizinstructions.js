@@ -18,8 +18,8 @@ const QuizInstructions = () => {
                 <h1>How to Play the Game</h1>
                 <p>Ensure you read this guide from start to finish.</p>
                 <ul className="browser-default" id="main-list">
-                    <li>The game has a duration of 15 minutes and ends as soon as your time elapses.</li>
                     <li>Each game consists of 15 questions.</li>
+                    <li>Each question has a duration of 15 seconds each and ends as soon as your time elapses.</li>
                     <li>
                         Every question contains 4 options.
                         <img src={options} alt="Quiz App options example" />
@@ -39,7 +39,7 @@ const QuizInstructions = () => {
                         Selecting a 50-50 lifeline by clicking the icon
                         <span className="mdi mdi-set-center mdi-24px lifeline-icon"></span>
                         will remove 2 wrong answers, leaving the correct answer and one wrong answer
-                        <img src={fiftyFifty} alt="Quiz App Fifty-Fifty example"/>
+                        <img src={fiftyFifty} alt="Quiz App Fifty-Fifty example" />
                     </li>
                     <li>
                         Using a hint by clicking the icon
@@ -51,14 +51,17 @@ const QuizInstructions = () => {
                     <li>The timer starts as soon as the game loads.</li>
                     <li>Let's do this if you think you've got what it takes?</li>
                 </ul>
-                <div>
-                    <span className="left"><Link to="/">No take me back</Link></span>
-                    <span className="right">
-                        <Link to="/play/quiz" state={{ category, difficulty }}>
-                            Okay, Let's do this!
-                        </Link>
-                    </span>
+                <div className="button-container">
+                    <Link to="/" className="btn left-btn">No, take me back</Link>
+                    <Link
+                        to="/play/quiz"
+                        state={{ category, difficulty }}
+                        className="btn right-btn"
+                    >
+                        Okay, Let's do this!
+                    </Link>
                 </div>
+
             </div>
         </Fragment>
     );

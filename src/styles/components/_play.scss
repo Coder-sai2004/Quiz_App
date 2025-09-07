@@ -152,12 +152,13 @@ $button-radius: 8px;
 // Button container below questions
 .button-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 1.5rem auto;
   padding: 0.5rem;
   width: 90%;
   max-width: 800px;
   gap: 1rem;
+  align-self: flex-start;
 
   button {
     border: none;
@@ -189,24 +190,8 @@ $button-radius: 8px;
     }
   }
 
-  // Specific button colors
-  button:first-child {
-    background: linear-gradient(135deg, lighten($neutral-dark, 15%), $neutral-dark);
-
-    &:hover {
-      background: linear-gradient(135deg, lighten($neutral-dark, 10%), darken($neutral-dark, 5%));
-    }
-  }
-
-  button:nth-child(2) {
-    background: linear-gradient(135deg, $secondary-green, darken($secondary-green, 10%));
-
-    &:hover {
-      background: linear-gradient(135deg, darken($secondary-green, 5%), darken($secondary-green, 15%));
-    }
-  }
-
   button:last-child {
+    
     background: linear-gradient(135deg, $danger-red, darken($danger-red, 10%));
     &:hover {
       background: linear-gradient(135deg, darken($danger-red, 5%), darken($danger-red, 15%));

@@ -123,3 +123,39 @@ $button-radius: 8px;
     }
   }
 }
+.button-container {
+  display: flex;
+/* push buttons to edges */
+  padding: 20px; /* space from page edges */
+}
+
+.btn {
+  padding: 5px 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+/* Left button - Go back (Red) */
+.left-btn {
+  background-color:red; /* red */
+  justify-content: flex-start;
+}
+
+.left-btn:hover {
+  background-color: #c0392b; /* darker red on hover */
+}
+
+/* Right button - Let's do this (Blue) */
+.right-btn {
+  background-color: #3498db; /* blue */
+  justify-content: flex-end;
+}
+
+.right-btn:hover {
+  background-color: #2980b9; /* darker blue on hover */
+}
+
+

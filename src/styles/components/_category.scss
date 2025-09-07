@@ -42,22 +42,32 @@ $shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2);
     text-align: left;
 }
 
-.select-input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid $primary-blue;
-    font-size: 1rem;
-    background: $white;
-    color: $neutral-dark;
-    box-shadow: $shadow-light;
-    appearance: none;
-    transition: border-color 0.2s ease-in-out;
+/* Button group for category/difficulty options */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
-    &:focus {
-        border-color: $secondary-green;
-        outline: none;
-        box-shadow: 0 0 8px rgba($secondary-green, 0.5);
+.option-btn {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid $primary-blue;
+    background: $white;
+    color: $primary-blue;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: $primary-blue;
+        color: $white;
+    }
+
+    &.active {
+        background: $primary-blue;
+        color: $white;
+        box-shadow: $shadow-light;
     }
 }
 
@@ -97,9 +107,9 @@ $shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2);
         font-size: 2rem;
     }
 
-    .select-input {
+    .option-btn {
+        padding: 8px 12px;
         font-size: 0.95rem;
-        padding: 8px;
     }
 
     .next-btn {
