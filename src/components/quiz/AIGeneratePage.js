@@ -18,14 +18,14 @@ export default function AiGeneratePage() {
                 const formData = new FormData();
                 formData.append("file", file);
 
-                const res = await axios.post("http://localhost:5000/api/extract-text", formData, {
+                const res = await axios.post("https://quiz-backend-oe1c.onrender.com/api/extract-text", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 extractedText = res.data.text;
             }
 
             // Call AI quiz generation
-            const quizRes = await axios.post("http://localhost:5000/api/generate-quiz", {
+            const quizRes = await axios.post("https://quiz-backend-oe1c.onrender.com/api/generate-quiz", {
                 text: extractedText,
             });
 
