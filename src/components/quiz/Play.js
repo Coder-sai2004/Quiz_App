@@ -18,7 +18,7 @@ const shuffleArray = (array) => {
 
 const Play = () => {
   const location = useLocation();
-  const { category, difficulty } = location.state || {};
+  const { category, difficulty, questions: aiQuestions, isAiQuiz } = location.state || {};
 
   const [questionsList, setQuestionsList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +35,9 @@ const Play = () => {
   const [nextButtonDisabled, setNextButtonDisabled] = useState(false);
   const [previousButtonDisabled, setPreviousButtonDisabled] = useState(true);
 
+  // track user answers for summary/review
+  const [userAnswers, setUserAnswers] = useState([]);
+
   const navigate = useNavigate();
   const intervalRef = useRef(null);
 
@@ -47,57 +50,82 @@ const Play = () => {
     return `${API_BASE}/api/questions${params.length ? `?${params.join('&')}` : ''}`;
   };
 
-  // Fetch questions
+  // Fetch questions OR use AI-generated ones
   useEffect(() => {
-    const url = buildUrl();
-    console.log('Fetching questions from:', url);
     let didCancel = false;
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        if (didCancel) return;
+    if (isAiQuiz && aiQuestions) {
+      console.log("Using AI-generated questions");
+      const randomQuestions = shuffleArray(aiQuestions).slice(0, 15);
 
-        if (!Array.isArray(data)) {
-          console.warn('Unexpected questions payload:', data);
-          setQuestionsList([]);
+      setQuestionsList(randomQuestions);
+      setCurrentQuestionIndex(0);
+      setScore(0);
+      setCorrectAnswers(0);
+      setWrongAnswers(0);
+      setHints(5);
+      setFiftyFifty(2);
+      setUsedFiftyFifty(false);
+      setPreviousRandomNumbers([]);
+      setAnsweredQuestionIndices(new Set());
+      setNextButtonDisabled(false);
+      setPreviousButtonDisabled(true);
+      setUserAnswers([]); // reset answers
+
+      if (randomQuestions.length > 0) startQuestionTimer();
+      setLoading(false);
+
+    } else {
+      const url = buildUrl();
+      console.log('Fetching questions from:', url);
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (didCancel) return;
+
+          if (!Array.isArray(data)) {
+            console.warn('Unexpected questions payload:', data);
+            setQuestionsList([]);
+            setLoading(false);
+            return;
+          }
+
+          const randomQuestions = shuffleArray(data).slice(0, 15);
+
+          setQuestionsList(randomQuestions);
+          setCurrentQuestionIndex(0);
+          setScore(0);
+          setCorrectAnswers(0);
+          setWrongAnswers(0);
+          setHints(5);
+          setFiftyFifty(2);
+          setUsedFiftyFifty(false);
+          setPreviousRandomNumbers([]);
+          setAnsweredQuestionIndices(new Set());
+          setNextButtonDisabled(false);
+          setPreviousButtonDisabled(true);
+          setUserAnswers([]); // reset answers
+
+          if (randomQuestions.length > 0) startQuestionTimer();
           setLoading(false);
-          return;
-        }
 
-        const randomQuestions = shuffleArray(data).slice(0, 15);
-
-        setQuestionsList(randomQuestions);
-        setCurrentQuestionIndex(0);
-        setScore(0);
-        setCorrectAnswers(0);
-        setWrongAnswers(0);
-        setHints(5);
-        setFiftyFifty(2);
-        setUsedFiftyFifty(false);
-        setPreviousRandomNumbers([]);
-        setAnsweredQuestionIndices(new Set());
-        setNextButtonDisabled(false);
-        setPreviousButtonDisabled(true);
-
-        if (randomQuestions.length > 0) startQuestionTimer();
-        setLoading(false);
-
-        if (randomQuestions.length === 0) {
-          M.toast({ html: 'No questions found for your selection.', classes: 'toast-invalid', displayLength: 2000 });
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching questions:', err);
-        setLoading(false);
-        M.toast({ html: 'Failed to load questions.', classes: 'toast-invalid', displayLength: 2000 });
-      });
+          if (randomQuestions.length === 0) {
+            M.toast({ html: 'No questions found for your selection.', classes: 'toast-invalid', displayLength: 2000 });
+          }
+        })
+        .catch(err => {
+          console.error('Error fetching questions:', err);
+          setLoading(false);
+          M.toast({ html: 'Failed to load questions.', classes: 'toast-invalid', displayLength: 2000 });
+        });
+    }
 
     return () => {
       didCancel = true;
       clearInterval(intervalRef.current);
     };
-  }, [category, difficulty]);
+  }, [category, difficulty, isAiQuiz, aiQuestions]);
 
   useEffect(() => {
     setPreviousButtonDisabled(currentQuestionIndex === 0);
@@ -127,9 +155,19 @@ const Play = () => {
     updatedAnsweredQuestionIndices.add(currentQuestionIndex);
     setAnsweredQuestionIndices(updatedAnsweredQuestionIndices);
 
+    // record skipped answer (user didn't select)
+    const skippedRecord = {
+      question: questionsList[currentQuestionIndex]?.question || '',
+      selected: null,
+      correct: questionsList[currentQuestionIndex]?.answer || ''
+    };
+
     if (currentQuestionIndex === questionsList.length - 1) {
-      endGame(score, correctAnswers, wrongAnswers);
+      const finalAnswers = [...userAnswers, skippedRecord];
+      setUserAnswers(finalAnswers);
+      endGame(score, correctAnswers, wrongAnswers, finalAnswers);
     } else {
+      setUserAnswers(prev => [...prev, skippedRecord]);
       setCurrentQuestionIndex(prev => prev + 1);
       resetOptionsVisibility();
     }
@@ -145,8 +183,10 @@ const Play = () => {
   const handleOptionClick = (e) => {
     clearInterval(intervalRef.current);
 
-    const selectedAnswer = e.target.innerHTML.toLowerCase();
-    const correctAnswer = questionsList[currentQuestionIndex].answer.toLowerCase();
+    const selectedAnswerRaw = e.target.innerHTML;
+    const selectedAnswer = selectedAnswerRaw.toLowerCase();
+    const correctAnswerRaw = questionsList[currentQuestionIndex].answer;
+    const correctAnswer = correctAnswerRaw.toLowerCase();
 
     let newScore = score;
     let newCorrectAnswers = correctAnswers;
@@ -159,16 +199,28 @@ const Play = () => {
       newWrongAnswers++;
     }
 
+    // prepare record for this question
+    const answerRecord = {
+      question: questionsList[currentQuestionIndex].question,
+      selected: selectedAnswerRaw,
+      correct: correctAnswerRaw
+    };
+
     const updatedAnsweredQuestionIndices = new Set(answeredQuestionIndices);
     updatedAnsweredQuestionIndices.add(currentQuestionIndex);
 
+    // build final answers array for end-of-quiz if needed
+    const finalAnswersIfEnd = [...userAnswers, answerRecord];
+
+    // update state
+    setUserAnswers(finalAnswersIfEnd);
     setScore(newScore);
     setCorrectAnswers(newCorrectAnswers);
     setWrongAnswers(newWrongAnswers);
     setAnsweredQuestionIndices(updatedAnsweredQuestionIndices);
 
     if (currentQuestionIndex === questionsList.length - 1) {
-      endGame(newScore, newCorrectAnswers, newWrongAnswers);
+      endGame(newScore, newCorrectAnswers, newWrongAnswers, finalAnswersIfEnd);
     } else {
       setCurrentQuestionIndex(prev => prev + 1);
       resetOptionsVisibility();
@@ -255,8 +307,8 @@ const Play = () => {
     setUsedFiftyFifty(true);
   };
 
-  // Updated endGame to handle skipped questions
-  const endGame = (finalScore, finalCorrectAnswers, finalWrongAnswers) => {
+  // Updated endGame to handle skipped questions + AI quizzes and include answers
+  const endGame = (finalScore, finalCorrectAnswers, finalWrongAnswers, finalAnswers = userAnswers) => {
     clearInterval(intervalRef.current);
     M.toast({ html: 'Quiz ended!', classes: 'toast-info', displayLength: 2000 });
 
@@ -273,8 +325,9 @@ const Play = () => {
       skippedQuestions: skippedQuestions,
       fiftyFiftyUsed: 2 - fiftyFifty,
       hintsUsed: 5 - hints,
-      category,
-      difficulty
+      category: isAiQuiz ? "AI Generated" : category,
+      difficulty: isAiQuiz ? "medium" : difficulty,
+      answers: finalAnswers // include answers for summary
     };
 
     const token = localStorage.getItem("token");
@@ -286,8 +339,8 @@ const Play = () => {
           "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
-          category,
-          difficulty,
+          category: playerStats.category,
+          difficulty: playerStats.difficulty,
           score: finalScore
         })
       })
@@ -309,7 +362,7 @@ const Play = () => {
       <Helmet><title>Quiz Page</title></Helmet>
 
       <div className="questions">
-        <h2>Quiz Mode</h2>
+        <h2>{isAiQuiz ? "AI Generated Quiz" : "Quiz Mode"}</h2>
         <div className="lifeline-container">
           <p>
             <span onClick={handleFiftyFifty} className="mdi mdi-set-center mdi-24px lifeline-icon" role="button">
@@ -353,11 +406,7 @@ const Play = () => {
         </div>
 
         <div className="button-container">
-
-          <button
-            id="quit-button"
-            onClick={handleQuitButtonClick}
-          >
+          <button id="quit-button" onClick={handleQuitButtonClick}>
             Quit
           </button>
         </div>

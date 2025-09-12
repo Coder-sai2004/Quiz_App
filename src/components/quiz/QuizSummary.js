@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const QuizSummary = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [state, setState] = useState({
     score: 0,
     numberOfQuestions: 0,
@@ -81,10 +82,24 @@ const QuizSummary = () => {
         <section>
           <ul>
             <li>
-              <Link to="/play/CategoryDifficultySelection">Play Again</Link>
+              <Link to="/play/CategoryDifficultySelection">
+                <span className="btn-blue">Play Again</span>
+              </Link>
             </li>
             <li>
-              <Link to="/">Back to Home</Link>
+              <Link to="/">
+                <span className="btn-black">Back to Home</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/review"
+                state={{ answers: location.state.answers || [] }}
+                className="review-link"
+              >
+                Review Answers
+              </Link>
+
             </li>
           </ul>
         </section>

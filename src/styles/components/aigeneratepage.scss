@@ -1,0 +1,96 @@
+// Shared variables
+$primary-blue: #4A90E2;
+$secondary-green: #50E3C2;
+$neutral-dark: #333333;
+$neutral-light: #F8F8F8;
+$white: #FFFFFF;
+$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2);
+$font-family: 'Inter', sans-serif;
+
+.ai-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 40px 32px;
+    background: $neutral-light;
+    border-radius: 16px;
+    box-shadow: $shadow-medium;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: $font-family;
+    color: $neutral-dark;
+}
+
+.ai-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $primary-blue;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.ai-label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: $primary-blue;
+    margin-bottom: 6px;
+}
+
+.ai-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid lighten($neutral-dark, 60%);
+    border-radius: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    font-family: $font-family;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        border-color: $primary-blue;
+        outline: none;
+        box-shadow: 0 0 8px rgba($primary-blue, 0.4);
+    }
+}
+
+.ai-file-input {
+    padding: 8px;
+    font-size: 0.95rem;
+}
+
+.ai-generate-btn {
+    padding: 14px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    background: linear-gradient(135deg, $primary-blue, $secondary-green);
+    color: $white;
+    border: none;
+    cursor: pointer;
+    box-shadow: $shadow-light;
+    transition: all 0.25s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, darken($primary-blue, 8%), darken($secondary-green, 8%));
+        transform: translateY(-2px);
+        box-shadow: $shadow-medium;
+    }
+
+    &:disabled {
+        background: lighten($primary-blue, 20%);
+        cursor: not-allowed;
+    }
+}
+
+// Responsive tweaks
+@media (max-width: 600px) {
+    .ai-container {
+        padding: 24px 20px;
+        margin: 30px auto;
+    }
+
+    .ai-heading {
+        font-size: 1.7rem;
+    }
+}

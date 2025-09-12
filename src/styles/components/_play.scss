@@ -140,12 +140,12 @@ $button-radius: 8px;
     transition: all 0.3s ease-in-out;
 
     &:hover,
-    &:active {
-      background: $neutral-dark;
-      box-shadow: $shadow-medium;
-      transform: translateY(-2px);
-      color: $white;
-    }
+  &:active {
+    background: linear-gradient(135deg, darken($primary-blue, 5%), darken($primary-blue, 20%));
+    box-shadow: $shadow-medium;
+    transform: translateY(-2px);
+    color: $white;
+  }
   }
 }
 

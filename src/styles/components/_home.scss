@@ -137,6 +137,11 @@ $shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.2); // Deeper shadow for interaction
       background: linear-gradient(135deg, darken($secondary-green, 5%), darken($secondary-green, 15%));
   }}
 
+  #leaderboard{
+      background: linear-gradient(135deg, $secondary-green, darken($secondary-green, 10%)); // Green for register/success
+    &:hover {
+      background: linear-gradient(135deg, darken($secondary-green, 5%), darken($secondary-green, 15%));
+  }}
   #logout{
      background: linear-gradient(135deg, $danger-red, darken($danger-red, 10%)); // Red for login/danger
     &:hover {

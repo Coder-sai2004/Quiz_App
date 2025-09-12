@@ -10,6 +10,9 @@ import Play from './components/quiz/Play';
 import QuizSummary from './components/quiz/QuizSummary';
 import History from "./components/quiz/History";
 import Leaderboard from "./components/quiz/Leaderboard";
+import AiGeneratePage from "./components/quiz/AIGeneratePage";
+import ReviewPage from './components/quiz/Review.js';
+
 
 
 function App() {
@@ -26,6 +29,8 @@ function App() {
         <Route path="/play/quizSummary" element={<QuizSummary />} />
         <Route path="/history" element={<History />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
+         <Route path="/aigenerate" element={<AiGeneratePage />} />
+         <Route path="/review" element={<ReviewPage/>}/>
       </Routes>
     </BrowserRouter>
   );

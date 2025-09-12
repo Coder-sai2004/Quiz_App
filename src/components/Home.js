@@ -80,6 +80,14 @@ const Home = () => {
               </>
             )}
           </div>
+
+          {isLoggedIn && (
+            <div className="card-panel teal lighten-5 center-align ai-generator">
+              <h5>Try our AI Quiz Generator!</h5>
+              <Link to="/aigenerate" className="btn waves-effect waves-light">
+                Go to AI Generator
+              </Link>
+            </div>)}
         </section>
       </div>
     </Fragment>
